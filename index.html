@@ -3,183 +3,154 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Litpax — Sales Lead Tracker v2</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Litpax — Sales Lead Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --ink:#0a0f1e; --ink2:#1e2a45; --ink3:#3d4f6e;
-  --muted:#7a8aaa; --muted2:#b0bdd4;
-  --bg:#f0f2f8; --bg2:#e4e8f2; --white:#fff;
-  --border:#dde3f0; --border2:#c8d0e8;
-  --blue:#1a4fd6; --blue-l:#eef3ff; --blue-m:#c2d2f8; --blue-d:#1240b0;
-  --green:#0d9e6e; --green-l:#edfaf5; --green-m:#a7edd8;
-  --amber:#c97a00; --amber-l:#fff8eb; --amber-m:#fde5a3;
-  --red:#d43b3b; --red-l:#fff0f0; --red-m:#f8c4c4;
-  --purple:#6d3be8; --purple-l:#f3effe; --purple-m:#d3bef8;
-  --sky:#0891c2; --sky-l:#ecf9ff; --sky-m:#a5d8f0;
-  --sh:0 1px 3px rgba(10,15,30,.06),0 2px 8px rgba(10,15,30,.04);
-  --sh2:0 4px 20px rgba(10,15,30,.10);
-  --sh3:0 12px 40px rgba(10,15,30,.16);
+:root{
+  --ink:#0a0f1e;--ink3:#3d4f6e;--muted:#7a8aaa;--muted2:#b0bdd4;
+  --bg:#f0f2f8;--bg2:#e4e8f2;--white:#fff;
+  --border:#dde3f0;--border2:#c8d0e8;
+  --blue:#1a4fd6;--blue-l:#eef3ff;--blue-m:#c2d2f8;--blue-d:#1240b0;
+  --green:#0d9e6e;--green-l:#edfaf5;--green-m:#a7edd8;
+  --amber:#c97a00;--amber-l:#fff8eb;--amber-m:#fde5a3;
+  --red:#d43b3b;--red-l:#fff0f0;--red-m:#f8c4c4;
+  --purple:#6d3be8;--purple-l:#f3effe;--purple-m:#d3bef8;
+  --sky:#0891c2;--sky-l:#ecf9ff;
+  --sh:0 1px 3px rgba(10,15,30,.07),0 2px 8px rgba(10,15,30,.05);
+  --sh2:0 6px 24px rgba(10,15,30,.12);
+  --sh3:0 16px 48px rgba(10,15,30,.18);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
 
-/* TOPBAR */
-.topbar{background:var(--ink);padding:.8rem 1.8rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(10,15,30,.3);}
-.tb-left{display:flex;align-items:center;gap:.75rem;}
-.tb-badge{background:var(--blue);color:#fff;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;padding:4px 10px;border-radius:5px;letter-spacing:.5px;}
-.tb-name{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:#fff;}
-.tb-sub{font-size:.65rem;color:rgba(255,255,255,.38);margin-top:1px;}
-.tb-stats{display:flex;gap:1.4rem;align-items:center;}
-.tb-s{text-align:center;}
-.tb-s-val{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:600;color:#fff;line-height:1;}
-.tb-s-lbl{font-size:.58rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
-.tb-div{width:1px;height:28px;background:rgba(255,255,255,.12);}
+/* ── TOPBAR ── */
+.topbar{background:var(--ink);height:50px;padding:0 1.6rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 14px rgba(10,15,30,.3);}
+.tb-left{display:flex;align-items:center;gap:.65rem;}
+.tb-badge{background:var(--blue);color:#fff;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;padding:3px 9px;border-radius:4px;letter-spacing:.5px;}
+.tb-name{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:#fff;}
+.tb-sub{font-size:.58rem;color:rgba(255,255,255,.35);margin-top:1px;}
+.tb-right{display:flex;align-items:center;gap:1.2rem;}
+.tb-k{text-align:center;}
+.tb-k-v{font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:600;color:#fff;}
+.tb-k-l{font-size:.52rem;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.4px;}
+.tb-sep{width:1px;height:22px;background:rgba(255,255,255,.1);}
+.btn-new-lead{background:var(--blue);color:#fff;border:none;border-radius:6px;padding:.4rem .9rem;font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:.3rem;}
+.btn-new-lead:hover{background:var(--blue-d);}
 
-/* LAYOUT */
-.layout{display:grid;grid-template-columns:300px 1fr;min-height:calc(100vh - 50px);}
+/* ── PAGE ── */
+.page{max-width:1100px;margin:0 auto;padding:1.2rem 1.4rem;}
 
-/* SIDEBAR */
-.sidebar{background:var(--white);border-right:1px solid var(--border);height:calc(100vh - 50px);overflow-y:auto;position:sticky;top:50px;}
-.sb-head{padding:1rem 1.2rem;background:linear-gradient(135deg,#0f2060,#1a4fd6);}
-.sb-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:#fff;}
-.sb-sub{font-size:.62rem;color:rgba(255,255,255,.55);margin-top:.15rem;}
-.sb-body{padding:.9rem 1rem;}
-.sb-sec{margin-bottom:.85rem;}
-.sb-sec-title{font-size:.58rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.1px;margin-bottom:.5rem;padding-bottom:.28rem;border-bottom:1px solid var(--border);}
-.fld{display:flex;flex-direction:column;gap:.2rem;margin-bottom:.5rem;}
-.fld label{font-size:.65rem;font-weight:600;color:var(--ink3);}
-.req{color:var(--red);}
-.fld input,.fld select,.fld textarea{background:var(--bg);border:1.5px solid var(--border);border-radius:7px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:.48rem .7rem;width:100%;transition:all .18s;-webkit-appearance:none;}
-.fld input:focus,.fld select:focus,.fld textarea:focus{outline:none;border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px var(--blue-l);}
-.fld select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237a8aaa' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .65rem center;padding-right:2rem;}
-.fld textarea{resize:none;height:54px;font-size:.78rem;}
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:.45rem;}
-
-/* Stage pills */
-.stage-pills{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.25rem;}
-.sp{padding:.3rem .65rem;border-radius:20px;font-size:.68rem;font-weight:600;border:1.5px solid var(--border);cursor:pointer;transition:all .15s;color:var(--muted);background:var(--bg);user-select:none;}
-.sp:hover{border-color:var(--blue-m);color:var(--blue);background:var(--blue-l);}
-.sp.sel{color:#fff;border-color:transparent;}
-.sp[data-s="New Lead"].sel{background:var(--sky);}
-.sp[data-s="Quotation Sent"].sel{background:var(--purple);}
-.sp[data-s="Follow-up"].sel{background:var(--amber);}
-.sp[data-s="Order Confirmed"].sel{background:var(--green);}
-.sp[data-s="Lost"].sel{background:var(--red);}
-
-.btn-add{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:.75rem;font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;letter-spacing:.3px;transition:all .2s;box-shadow:0 4px 14px rgba(26,79,214,.32);margin-top:.4rem;display:flex;align-items:center;justify-content:center;gap:.4rem;}
-.btn-add:hover{background:var(--blue-d);transform:translateY(-1px);}
-.btn-add:active{transform:scale(.98);}
-.btn-add:disabled{background:var(--border2);box-shadow:none;cursor:not-allowed;color:var(--muted);}
-
-/* MAIN */
-.main{padding:1.2rem;overflow-y:auto;}
-
-/* KPI row */
-.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:.6rem;margin-bottom:1rem;}
-.kpi{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:.75rem .9rem;box-shadow:var(--sh);position:relative;overflow:hidden;}
+/* ── KPI STRIP ── */
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:.55rem;margin-bottom:1rem;}
+.kpi{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:.65rem .85rem;box-shadow:var(--sh);position:relative;overflow:hidden;cursor:pointer;transition:box-shadow .15s,transform .15s;}
+.kpi:hover{box-shadow:var(--sh2);transform:translateY(-1px);}
 .kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
-.kpi-total::after{background:linear-gradient(90deg,var(--blue),var(--sky));}
+.kpi-all::after{background:linear-gradient(90deg,var(--blue),var(--sky));}
 .kpi-new::after{background:var(--sky);}
 .kpi-quot::after{background:var(--purple);}
-.kpi-follow::after{background:var(--amber);}
+.kpi-fol::after{background:var(--amber);}
 .kpi-won::after{background:var(--green);}
 .kpi-lost::after{background:var(--red);}
-.kpi-val{font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:600;color:var(--ink);line-height:1;}
-.kpi-lbl{font-size:.58rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:.25rem;}
-.kpi-sub{font-size:.62rem;color:var(--muted2);margin-top:.1rem;}
+.kpi-v{font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:600;color:var(--ink);line-height:1;}
+.kpi-l{font-size:.58rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:.22rem;}
+.kpi.active-kpi{box-shadow:var(--sh2);transform:translateY(-1px);}
+.kpi-all.active-kpi .kpi-v{color:var(--blue);}
+.kpi-new.active-kpi .kpi-v{color:var(--sky);}
+.kpi-quot.active-kpi .kpi-v{color:var(--purple);}
+.kpi-fol.active-kpi .kpi-v{color:var(--amber);}
+.kpi-won.active-kpi .kpi-v{color:var(--green);}
+.kpi-lost.active-kpi .kpi-v{color:var(--red);}
 
-/* Pipeline bar */
-.pipe-bar{display:flex;height:6px;border-radius:4px;overflow:hidden;gap:2px;margin-bottom:1rem;}
-.pb-s{border-radius:3px;transition:flex .4s ease;min-width:4px;}
+/* ── PIPELINE BAR ── */
+.pipe-bar{display:flex;height:5px;border-radius:3px;overflow:hidden;gap:2px;margin-bottom:1rem;}
+.pb-s{border-radius:2px;transition:flex .4s;min-width:3px;}
 
-/* Filter row */
-.filter-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;flex-wrap:wrap;}
-.fb{padding:.35rem .8rem;border-radius:20px;font-size:.72rem;font-weight:600;border:1.5px solid var(--border);cursor:pointer;transition:all .14s;color:var(--muted);background:var(--white);font-family:'DM Sans',sans-serif;}
-.fb:hover{border-color:var(--blue-m);color:var(--blue);}
-.fb.on{color:#fff;border-color:transparent;}
-.fb-all.on{background:var(--ink);}
-.fb-new.on{background:var(--sky);}
-.fb-quot.on{background:var(--purple);}
-.fb-fol.on{background:var(--amber);}
-.fb-won.on{background:var(--green);}
-.fb-lost.on{background:var(--red);}
-.fsearch{margin-left:auto;background:var(--white);border:1.5px solid var(--border);border-radius:7px;padding:.35rem .75rem;font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--ink);outline:none;transition:all .18s;width:170px;}
+/* ── TOOLBAR ── */
+.toolbar{display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem;flex-wrap:wrap;}
+.fsearch{background:var(--white);border:1.5px solid var(--border);border-radius:7px;padding:.38rem .75rem;font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--ink);outline:none;transition:all .15s;width:200px;}
 .fsearch:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-l);}
-
-/* Sort row */
-.sort-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem;font-size:.72rem;color:var(--muted);}
-.sort-btn{padding:.28rem .7rem;border-radius:6px;font-size:.68rem;font-weight:600;border:1px solid var(--border);cursor:pointer;background:var(--white);color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .14s;}
+.sort-lbl{font-size:.7rem;color:var(--muted);margin-left:auto;}
+.sort-btn{padding:.3rem .65rem;border-radius:6px;font-size:.68rem;font-weight:600;border:1px solid var(--border);cursor:pointer;background:var(--white);color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .13s;}
 .sort-btn:hover,.sort-btn.on{background:var(--bg2);border-color:var(--border2);color:var(--ink3);}
 
-/* LEAD CARDS */
-.leads{display:flex;flex-direction:column;gap:.6rem;}
-.lcard{background:var(--white);border:1px solid var(--border);border-radius:11px;overflow:hidden;box-shadow:var(--sh);transition:all .18s;cursor:pointer;}
-.lcard:hover{box-shadow:var(--sh2);transform:translateY(-1px);border-color:var(--border2);}
-.lc-wrap{display:flex;align-items:stretch;}
-.lc-bar{width:4px;flex-shrink:0;}
-.bar-new{background:var(--sky);}
-.bar-quot{background:var(--purple);}
-.bar-fol{background:var(--amber);}
-.bar-won{background:var(--green);}
-.bar-lost{background:var(--red);}
-.lc-body{flex:1;padding:.75rem .9rem;}
-.lc-top-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.5rem;gap:.5rem;}
-.lc-name{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--ink);}
-.lc-co{font-size:.68rem;color:var(--muted);margin-top:.1rem;}
-.badge{font-size:.6rem;font-weight:700;padding:.2rem .6rem;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+/* ── LEAD TABLE ── */
+.lead-table{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--sh);}
+.lt-head{display:grid;grid-template-columns:2fr 1.4fr 1.2fr 1fr 1fr 1fr;align-items:center;padding:.55rem 1rem;background:var(--bg2);border-bottom:1px solid var(--border);gap:.5rem;}
+.lt-h{font-size:.6rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;}
+.lt-body{display:flex;flex-direction:column;}
+.lt-row{display:grid;grid-template-columns:2fr 1.4fr 1.2fr 1fr 1fr 1fr;align-items:center;padding:.6rem 1rem;border-bottom:1px solid var(--border);gap:.5rem;cursor:pointer;transition:background .12s;}
+.lt-row:last-child{border-bottom:none;}
+.lt-row:hover{background:var(--blue-l);}
 
-/* Journey */
-.journey{display:flex;align-items:center;margin:.55rem 0;position:relative;}
+/* name col */
+.lt-name{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:var(--ink);}
+.lt-co{font-size:.65rem;color:var(--muted);margin-top:.08rem;}
+.lt-phone{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--ink3);}
+
+/* stage badge */
+.badge{font-size:.6rem;font-weight:700;padding:.2rem .6rem;border-radius:20px;white-space:nowrap;display:inline-block;}
+
+/* app col */
+.lt-app{font-size:.72rem;color:var(--ink3);}
+
+/* follow-up col */
+.fu-ok  {font-size:.68rem;font-weight:600;color:var(--green);}
+.fu-due {font-size:.68rem;font-weight:600;color:var(--amber);}
+.fu-over{font-size:.68rem;font-weight:600;color:var(--red);}
+.fu-none{font-size:.68rem;color:var(--muted2);}
+
+/* assigned col */
+.lt-asgn{font-size:.7rem;color:var(--ink3);}
+
+/* action col */
+.row-actions{display:flex;gap:.25rem;}
+.ra{font-size:.6rem;font-weight:700;padding:.2rem .5rem;border-radius:4px;border:1px solid var(--border);cursor:pointer;background:var(--bg);color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .12s;white-space:nowrap;}
+.ra:hover{background:var(--blue-l);border-color:var(--blue-m);color:var(--blue);}
+.ra.won{color:var(--green);}
+.ra.lost{color:var(--red);}
+
+.empty-state{text-align:center;padding:3.5rem 2rem;color:var(--muted);}
+.empty-icon{font-size:2.2rem;opacity:.25;margin-bottom:.4rem;}
+.empty-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--ink3);}
+
+/* ── ADD LEAD MODAL ── */
+.moverlay{display:none;position:fixed;inset:0;background:rgba(10,15,30,.65);z-index:200;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(5px);}
+.moverlay.open{display:flex;}
+
+/* Detail modal — wide */
+.modal-detail{background:var(--white);border-radius:14px;width:100%;max-width:660px;max-height:92vh;overflow-y:auto;box-shadow:var(--sh3);animation:mIn .18s ease;}
+/* Add lead modal — medium */
+.modal-add{background:var(--white);border-radius:14px;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;box-shadow:var(--sh3);animation:mIn .18s ease;}
+@keyframes mIn{from{opacity:0;transform:scale(.95) translateY(12px);}to{opacity:1;transform:none;}}
+
+.mhead{padding:.9rem 1.2rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#0d1c44,#1a4fd6);border-radius:14px 14px 0 0;position:sticky;top:0;z-index:5;}
+.mtitle{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:700;color:#fff;}
+.mclose{background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;}
+.mbody{padding:1rem 1.2rem;}
+.mfooter{padding:.75rem 1.2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:.5rem;position:sticky;bottom:0;background:var(--white);border-radius:0 0 14px 14px;}
+
+/* Detail sections */
+.sec-title{font-size:.58rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;margin-bottom:.5rem;padding-bottom:.28rem;border-bottom:1px solid var(--border);}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-bottom:.85rem;}
+.ditem{background:var(--bg);border-radius:6px;padding:.5rem .7rem;}
+.dlbl{font-size:.55rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:.12rem;}
+.dval{font-size:.8rem;font-weight:500;color:var(--ink);}
+
+/* Journey in modal */
+.journey{display:flex;align-items:center;margin:.5rem 0 .9rem;position:relative;}
 .jstep{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;cursor:pointer;}
-.jstep:not(:last-child)::after{content:'';position:absolute;top:10px;left:50%;right:-50%;height:2px;background:var(--border2);z-index:0;transition:background .3s;}
+.jstep:not(:last-child)::after{content:'';position:absolute;top:11px;left:50%;right:-50%;height:2px;background:var(--border2);z-index:0;transition:background .25s;}
 .jstep.done:not(:last-child)::after{background:var(--green);}
-.jdot{width:20px;height:20px;border-radius:50%;border:2px solid var(--border2);background:var(--bg);z-index:1;position:relative;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;transition:all .22s;color:var(--muted2);}
+.jdot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);background:var(--bg);z-index:1;position:relative;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;transition:all .2s;color:var(--muted2);}
 .jdot.done{background:var(--green);border-color:var(--green);color:#fff;}
 .jdot.active{border-width:3px;}
 .jdot.jlost{background:var(--red);border-color:var(--red);color:#fff;}
-.jlbl{font-size:8px;color:var(--muted);margin-top:3px;text-align:center;line-height:1.2;max-width:50px;}
+.jlbl{font-size:9px;color:var(--muted);margin-top:4px;text-align:center;line-height:1.2;max-width:54px;}
 .jlbl.active{color:var(--ink);font-weight:700;}
 
-.lc-chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.45rem;}
-.chip{font-size:.62rem;color:var(--ink3);background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:.15rem .45rem;font-family:'JetBrains Mono',monospace;}
-
-.lc-foot{display:flex;align-items:center;justify-content:space-between;gap:.4rem;}
-.follow-lbl{font-size:.65rem;font-weight:600;display:flex;align-items:center;gap:.25rem;}
-.f-ok{color:var(--green);}
-.f-due{color:var(--amber);}
-.f-over{color:var(--red);}
-.qbtns{display:flex;gap:.28rem;}
-.qb{font-size:.62rem;font-weight:700;padding:.22rem .55rem;border-radius:5px;border:1px solid var(--border);cursor:pointer;background:var(--bg);color:var(--ink3);font-family:'DM Sans',sans-serif;transition:all .13s;}
-.qb:hover{background:var(--blue-l);border-color:var(--blue-m);color:var(--blue);}
-.qb.next{background:var(--blue-l);border-color:var(--blue-m);color:var(--blue);}
-.qb.won{background:var(--green-l);border-color:var(--green-m);color:var(--green);}
-.qb.lost{background:var(--red-l);border-color:var(--red-m);color:var(--red);}
-.lc-notes{font-size:.68rem;color:var(--muted);margin-top:.35rem;padding-top:.35rem;border-top:1px dashed var(--border);font-style:italic;}
-.lc-hist{margin-top:.4rem;padding-top:.4rem;border-top:1px dashed var(--border);}
-.lc-hist-title{font-size:.56rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:.25rem;}
-.lc-hist-row{display:flex;gap:.4rem;font-size:.64rem;padding:1px 0;color:var(--muted);}
-.lc-hist-row b{color:var(--ink3);}
-
-/* MODAL */
-.moverlay{display:none;position:fixed;inset:0;background:rgba(10,15,30,.6);z-index:200;align-items:center;justify-content:center;padding:1.2rem;backdrop-filter:blur(5px);}
-.moverlay.open{display:flex;}
-.modal{background:var(--white);border-radius:14px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:var(--sh3);animation:mIn .2s ease;}
-@keyframes mIn{from{opacity:0;transform:scale(.95) translateY(12px);}to{opacity:1;transform:none;}}
-.mhead{padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#0d1c44,#1a4fd6);border-radius:14px 14px 0 0;}
-.mtitle{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:#fff;}
-.mclose{background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:5px;cursor:pointer;font-size:.95rem;display:flex;align-items:center;justify-content:center;}
-.mbody{padding:1rem 1.2rem;}
-.mfooter{padding:.8rem 1.2rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:.5rem;}
-
-.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.9rem;}
-.ditem{background:var(--bg);border-radius:7px;padding:.55rem .75rem;}
-.dlbl{font-size:.56rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.18rem;}
-.dval{font-size:.82rem;font-weight:500;color:var(--ink);}
-
-.stage-btns{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.35rem;}
-.sb2{padding:.38rem .8rem;border-radius:20px;font-size:.72rem;font-weight:700;border:1.5px solid var(--border);cursor:pointer;transition:all .16s;background:var(--bg);color:var(--muted);font-family:'DM Sans',sans-serif;}
-.sb2:hover{transform:scale(1.03);}
+/* Stage update buttons */
+.stage-btns{display:flex;flex-wrap:wrap;gap:.3rem;margin:.35rem 0 .85rem;}
+.sb2{padding:.35rem .8rem;border-radius:20px;font-size:.7rem;font-weight:700;border:1.5px solid var(--border);cursor:pointer;transition:all .14s;background:var(--bg);color:var(--muted);font-family:'DM Sans',sans-serif;}
 .sb2[data-s="New Lead"]{border-color:var(--sky);color:var(--sky);}
 .sb2[data-s="Quotation Sent"]{border-color:var(--purple);color:var(--purple);}
 .sb2[data-s="Follow-up"]{border-color:var(--amber);color:var(--amber);}
@@ -192,160 +163,224 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 .sb2[data-s="Order Confirmed"].cur{background:var(--green);}
 .sb2[data-s="Lost"].cur{background:var(--red);}
 
-/* COPY TABLE */
-.copy-section{background:var(--bg);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:.8rem;}
-.copy-head{display:flex;align-items:center;justify-content:space-between;padding:.6rem .85rem;background:var(--ink);border-radius:10px 10px 0 0;}
-.copy-head-title{font-size:.7rem;font-weight:700;color:#fff;font-family:'Syne',sans-serif;}
-.copy-btns{display:flex;gap:.4rem;}
-.cbtn{font-size:.65rem;font-weight:700;padding:.28rem .7rem;border-radius:5px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+/* History */
+.hist-list{display:flex;flex-direction:column;gap:.2rem;max-height:110px;overflow-y:auto;background:var(--bg);border-radius:6px;padding:.45rem .65rem;}
+.hist-row{display:flex;gap:.45rem;font-size:.66rem;padding:2px 0;border-bottom:1px dashed var(--border);}
+.hist-row:last-child{border-bottom:none;}
+.hist-date{color:var(--muted);white-space:nowrap;min-width:70px;}
+.hist-stage{font-weight:600;color:var(--ink3);}
+.hist-note{color:var(--muted);}
+
+/* Copy table */
+.copy-wrap{background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:.85rem;}
+.copy-head{display:flex;align-items:center;justify-content:space-between;padding:.5rem .8rem;background:var(--ink3);}
+.copy-head-title{font-size:.68rem;font-weight:700;color:#fff;font-family:'Syne',sans-serif;}
+.cbtns{display:flex;gap:.3rem;}
+.cbtn{font-size:.62rem;font-weight:700;padding:.24rem .6rem;border-radius:4px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .13s;}
 .cbtn-row{background:var(--blue-l);color:var(--blue);}
 .cbtn-row:hover{background:var(--blue);color:#fff;}
 .cbtn-full{background:var(--green-l);color:var(--green);}
 .cbtn-full:hover{background:var(--green);color:#fff;}
-.copy-table{width:100%;border-collapse:collapse;}
-.copy-table tr{border-bottom:1px solid var(--border);}
-.copy-table tr:last-child{border-bottom:none;}
-.copy-table td{padding:.32rem .7rem;font-size:.68rem;font-family:'JetBrains Mono',monospace;}
-.ct-col{background:var(--ink);color:rgba(255,255,255,.65);font-weight:600;white-space:nowrap;width:28%;font-size:.62rem;letter-spacing:.3px;}
-.ct-val{color:var(--ink3);word-break:break-all;background:var(--white);}
-.ct-val.empty{color:var(--muted2);font-style:italic;}
+.ctable{width:100%;border-collapse:collapse;}
+.ctable tr{border-bottom:1px solid var(--border);}
+.ctable tr:last-child{border-bottom:none;}
+.ctable td{padding:.26rem .65rem;font-size:.64rem;font-family:'JetBrains Mono',monospace;}
+.ct-h{background:var(--ink3);color:rgba(255,255,255,.6);white-space:nowrap;width:30%;font-size:.6rem;font-weight:500;}
+.ct-v{color:var(--ink3);background:var(--white);word-break:break-all;}
+.ct-mt{color:var(--muted2);font-style:italic;}
+
+/* Add form */
+.fld{display:flex;flex-direction:column;gap:.2rem;margin-bottom:.48rem;}
+.fld label{font-size:.64rem;font-weight:600;color:var(--ink3);}
+.req{color:var(--red);}
+.fld input,.fld select,.fld textarea{background:var(--bg);border:1.5px solid var(--border);border-radius:6px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:.46rem .68rem;width:100%;transition:border .15s;-webkit-appearance:none;}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:none;border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px var(--blue-l);}
+.fld select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5'%3E%3Cpath d='M1 1l3.5 3.5L8 1' stroke='%237a8aaa' stroke-width='1.4' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .6rem center;padding-right:1.8rem;}
+.fld textarea{resize:none;height:50px;font-size:.78rem;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;}
+.f3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.4rem;}
+.stage-pills{display:flex;flex-wrap:wrap;gap:.28rem;margin-top:.2rem;}
+.sp{padding:.28rem .62rem;border-radius:20px;font-size:.66rem;font-weight:600;border:1.5px solid var(--border);cursor:pointer;transition:all .14s;color:var(--muted);background:var(--bg);user-select:none;}
+.sp:hover{border-color:var(--blue-m);color:var(--blue);background:var(--blue-l);}
+.sp.sel{color:#fff;border-color:transparent;}
+.sp[data-s="New Lead"].sel{background:var(--sky);}
+.sp[data-s="Quotation Sent"].sel{background:var(--purple);}
+.sp[data-s="Follow-up"].sel{background:var(--amber);}
+.sp[data-s="Order Confirmed"].sel{background:var(--green);}
+.sp[data-s="Lost"].sel{background:var(--red);}
+.form-sec-title{font-size:.58rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;margin:.7rem 0 .45rem;padding-bottom:.25rem;border-bottom:1px solid var(--border);}
+
+/* Buttons */
+.btn-primary{background:var(--blue);color:#fff;border:none;border-radius:7px;padding:.55rem 1.2rem;font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .16s;box-shadow:0 3px 10px rgba(26,79,214,.28);}
+.btn-primary:hover{background:var(--blue-d);}
+.btn-primary:disabled{background:var(--border2);box-shadow:none;cursor:not-allowed;color:var(--muted);}
+.btn-danger{background:var(--red-l);color:var(--red);border:1px solid var(--red-m);border-radius:6px;padding:.48rem .9rem;font-size:.74rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.btn-save{background:var(--blue);color:#fff;border:none;border-radius:6px;padding:.48rem 1.1rem;font-size:.76rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 2px 8px rgba(26,79,214,.22);}
+.mlbl{font-size:.58rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.9px;margin-bottom:.35rem;}
 
 /* Toast */
-.toast{position:fixed;bottom:1.4rem;right:1.4rem;background:var(--ink);color:#fff;padding:.7rem 1.1rem;border-radius:9px;font-size:.8rem;font-weight:600;z-index:300;opacity:0;transform:translateY(10px);transition:all .25s;box-shadow:var(--sh3);}
+.toast{position:fixed;bottom:1.2rem;right:1.2rem;background:var(--ink);color:#fff;padding:.62rem 1rem;border-radius:8px;font-size:.78rem;font-weight:600;z-index:500;opacity:0;transform:translateY(8px);transition:all .22s;box-shadow:var(--sh3);}
 .toast.show{opacity:1;transform:translateY(0);}
 .toast.ok{background:var(--green);}
 .toast.err{background:var(--red);}
-
-.empty-state{text-align:center;padding:3.5rem 2rem;color:var(--muted);}
-.empty-icon{font-size:2.2rem;opacity:.3;margin-bottom:.5rem;}
-.empty-title{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:var(--ink3);}
-
-/* Section label inside modal */
-.mlbl{font-size:.58rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.4rem;}
 </style>
 </head>
 <body>
 
+<!-- TOPBAR -->
 <div class="topbar">
   <div class="tb-left">
     <div class="tb-badge">LITPAX</div>
     <div>
       <div class="tb-name">Sales Lead Tracker</div>
-      <div class="tb-sub">Pipeline Management · v2</div>
+      <div class="tb-sub">Pipeline Management</div>
     </div>
   </div>
-  <div class="tb-stats">
-    <div class="tb-s"><div class="tb-s-val" id="t-total">0</div><div class="tb-s-lbl">Total</div></div>
-    <div class="tb-div"></div>
-    <div class="tb-s"><div class="tb-s-val" id="t-won">0</div><div class="tb-s-lbl">Won</div></div>
-    <div class="tb-div"></div>
-    <div class="tb-s"><div class="tb-s-val" id="t-rate">0%</div><div class="tb-s-lbl">Rate</div></div>
-    <div class="tb-div"></div>
-    <div class="tb-s"><div class="tb-s-val" id="t-due">0</div><div class="tb-s-lbl">Due Today</div></div>
+  <div class="tb-right">
+    <div class="tb-k"><div class="tb-k-v" id="t-total">0</div><div class="tb-k-l">Total</div></div>
+    <div class="tb-sep"></div>
+    <div class="tb-k"><div class="tb-k-v" id="t-won">0</div><div class="tb-k-l">Won</div></div>
+    <div class="tb-sep"></div>
+    <div class="tb-k"><div class="tb-k-v" id="t-rate">0%</div><div class="tb-k-l">Conv. Rate</div></div>
+    <div class="tb-sep"></div>
+    <div class="tb-k"><div class="tb-k-v" id="t-due" style="color:#fde5a3">0</div><div class="tb-k-l">Due Today</div></div>
+    <div class="tb-sep"></div>
+    <button class="btn-new-lead" onclick="openAddModal()">+ New Lead</button>
   </div>
 </div>
 
-<div class="layout">
-  <!-- SIDEBAR FORM -->
-  <div class="sidebar">
-    <div class="sb-head">
-      <div class="sb-title">+ Add New Lead</div>
-      <div class="sb-sub">Naya prospect pipeline mein add karo</div>
+<!-- PAGE -->
+<div class="page">
+
+  <!-- KPI (click to filter) -->
+  <div class="kpi-row">
+    <div class="kpi kpi-all active-kpi" id="kpi-all"   onclick="setFilter('All',this)">       <div class="kpi-v" id="k-total">0</div><div class="kpi-l">All Leads</div></div>
+    <div class="kpi kpi-new"            id="kpi-new"   onclick="setFilter('New Lead',this)">  <div class="kpi-v" id="k-new">0</div>  <div class="kpi-l">New Lead</div></div>
+    <div class="kpi kpi-quot"           id="kpi-quot"  onclick="setFilter('Quotation Sent',this)"><div class="kpi-v" id="k-quot">0</div><div class="kpi-l">Quotation</div></div>
+    <div class="kpi kpi-fol"            id="kpi-fol"   onclick="setFilter('Follow-up',this)"> <div class="kpi-v" id="k-fol">0</div>  <div class="kpi-l">Follow-up</div></div>
+    <div class="kpi kpi-won"            id="kpi-won"   onclick="setFilter('Order Confirmed',this)"><div class="kpi-v" id="k-won">0</div><div class="kpi-l">Won</div></div>
+    <div class="kpi kpi-lost"           id="kpi-lost"  onclick="setFilter('Lost',this)">      <div class="kpi-v" id="k-lost">0</div> <div class="kpi-l">Lost</div></div>
+  </div>
+
+  <div class="pipe-bar" id="pipe-bar"></div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <input class="fsearch" type="text" id="search-inp" placeholder="🔍 Name, company, phone search karo..." oninput="renderTable()">
+    <span class="sort-lbl">Sort:</span>
+    <button class="sort-btn on" onclick="setSort('date',this)">Latest</button>
+    <button class="sort-btn"    onclick="setSort('name',this)">Name</button>
+    <button class="sort-btn"    onclick="setSort('followup',this)">Follow-up</button>
+    <button class="sort-btn"    onclick="setSort('stage',this)">Stage</button>
+  </div>
+
+  <!-- Lead Table -->
+  <div class="lead-table">
+    <div class="lt-head">
+      <div class="lt-h">Customer</div>
+      <div class="lt-h">Application</div>
+      <div class="lt-h">Stage</div>
+      <div class="lt-h">Follow-up</div>
+      <div class="lt-h">Assigned</div>
+      <div class="lt-h">Actions</div>
     </div>
-    <div class="sb-body">
+    <div class="lt-body" id="lt-body"></div>
+  </div>
+</div>
 
-      <div class="sb-sec">
-        <div class="sb-sec-title">Customer Info</div>
-        <div class="fld"><label>Customer Name <span class="req">*</span></label><input type="text" id="f-name" placeholder="Full name" autocomplete="off"></div>
-        <div class="frow">
-          <div class="fld"><label>Phone <span class="req">*</span></label><input type="tel" id="f-phone" placeholder="Mobile"></div>
-          <div class="fld"><label>Email</label><input type="email" id="f-email" placeholder="email@..."></div>
-        </div>
-        <div class="fld"><label>Company / Dealer</label><input type="text" id="f-company" placeholder="Company name"></div>
-        <div class="frow">
-          <div class="fld"><label>City</label><input type="text" id="f-city" placeholder="City"></div>
-          <div class="fld"><label>State</label><input type="text" id="f-state" placeholder="State"></div>
-        </div>
+<!-- ── DETAIL MODAL ── -->
+<div class="moverlay" id="modal-detail" onclick="if(event.target===this)closeDetail()">
+  <div class="modal-detail">
+    <div class="mhead">
+      <div class="mtitle" id="detail-title">Lead Details</div>
+      <button class="mclose" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="mbody" id="detail-body"></div>
+    <div class="mfooter" id="detail-footer"></div>
+  </div>
+</div>
+
+<!-- ── ADD LEAD MODAL ── -->
+<div class="moverlay" id="modal-add" onclick="if(event.target===this)closeAddModal()">
+  <div class="modal-add">
+    <div class="mhead">
+      <div class="mtitle">+ Add New Lead</div>
+      <button class="mclose" onclick="closeAddModal()">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="form-sec-title">Customer Info</div>
+      <div class="fld"><label>Customer Name <span class="req">*</span></label><input type="text" id="f-name" placeholder="Full name" autocomplete="off"></div>
+      <div class="frow">
+        <div class="fld"><label>Phone <span class="req">*</span></label><input type="tel" id="f-phone" placeholder="Mobile"></div>
+        <div class="fld"><label>Email</label><input type="email" id="f-email" placeholder="email@..."></div>
       </div>
+      <div class="frow">
+        <div class="fld"><label>Company / Dealer</label><input type="text" id="f-company" placeholder="Company name"></div>
+        <div class="fld"><label>City</label><input type="text" id="f-city" placeholder="City"></div>
+      </div>
+      <div class="fld"><label>State</label><input type="text" id="f-state" placeholder="State"></div>
 
-      <div class="sb-sec">
-        <div class="sb-sec-title">Battery Requirement</div>
-        <div class="fld"><label>Application Type <span class="req">*</span></label>
-          <select id="f-oem">
-            <option value="">-- Select --</option>
-            <option>2 Wheeler (Electric Bike/Scooter)</option>
-            <option>3 Wheeler (E-Rickshaw/Auto)</option>
-            <option>Solar (Home/Commercial)</option>
-            <option>Inverter / Home UPS</option>
-            <option>Cycle (E-Cycle)</option>
-            <option>Other</option>
+      <div class="form-sec-title">Battery Requirement</div>
+      <div class="fld"><label>Application Type <span class="req">*</span></label>
+        <select id="f-oem">
+          <option value="">-- Select Application --</option>
+          <option>2 Wheeler (Electric Bike/Scooter)</option>
+          <option>3 Wheeler (E-Rickshaw/Auto)</option>
+          <option>Solar (Home/Commercial)</option>
+          <option>Inverter / Home UPS</option>
+          <option>Cycle (E-Cycle)</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="f3">
+        <div class="fld"><label>Voltage</label>
+          <select id="f-voltage">
+            <option value="">-- V --</option>
+            <option>12V</option><option>24V</option><option>36V</option>
+            <option>48V</option><option>60V</option><option>72V</option><option>96V</option><option>Custom</option>
           </select>
         </div>
-        <div class="frow">
-          <div class="fld"><label>Voltage</label>
-            <select id="f-voltage">
-              <option value="">-- V --</option>
-              <option>12V</option><option>24V</option><option>36V</option>
-              <option>48V</option><option>60V</option><option>72V</option><option>96V</option><option>Custom</option>
-            </select>
-          </div>
-          <div class="fld"><label>Capacity</label>
-            <select id="f-capacity">
-              <option value="">-- Ah --</option>
-              <option>20Ah</option><option>30Ah</option><option>40Ah</option>
-              <option>50Ah</option><option>60Ah</option><option>75Ah</option>
-              <option>100Ah</option><option>150Ah</option><option>200Ah</option><option>Custom</option>
-            </select>
-          </div>
+        <div class="fld"><label>Capacity</label>
+          <select id="f-capacity">
+            <option value="">-- Ah --</option>
+            <option>20Ah</option><option>30Ah</option><option>40Ah</option>
+            <option>50Ah</option><option>60Ah</option><option>75Ah</option>
+            <option>100Ah</option><option>150Ah</option><option>200Ah</option><option>Custom</option>
+          </select>
         </div>
-        <div class="frow">
-          <div class="fld"><label>No. of Batteries</label><input type="number" id="f-fleet" placeholder="Qty" min="1"></div>
-          <div class="fld"><label>Budget (₹)</label>
-            <select id="f-amount">
-              <option value="">-- Select --</option>
-              <option value="Under 5000">Under ₹5,000</option>
-              <option value="5000-10000">₹5K–₹10K</option>
-              <option value="10000-25000">₹10K–₹25K</option>
-              <option value="25000-50000">₹25K–₹50K</option>
-              <option value="50000-100000">₹50K–₹1L</option>
-              <option value="Above 100000">Above ₹1L</option>
-            </select>
-          </div>
+        <div class="fld"><label>Qty</label><input type="number" id="f-fleet" placeholder="No." min="1"></div>
+      </div>
+      <div class="frow">
+        <div class="fld"><label>Budget (₹)</label>
+          <select id="f-amount">
+            <option value="">-- Select --</option>
+            <option value="Under 5000">Under ₹5K</option>
+            <option value="5000-10000">₹5K–₹10K</option>
+            <option value="10000-25000">₹10K–₹25K</option>
+            <option value="25000-50000">₹25K–₹50K</option>
+            <option value="50000-100000">₹50K–₹1L</option>
+            <option value="Above 100000">Above ₹1L</option>
+          </select>
         </div>
         <div class="fld"><label>Existing Brand</label>
           <select id="f-model">
-            <option value="">-- Current brand --</option>
+            <option value="">-- Brand --</option>
             <option>Exide</option><option>Amaron</option><option>Luminous</option>
             <option>Okaya</option><option>Livguard</option><option>Su-Kam</option>
             <option>Microtek</option><option>Loom Solar</option>
             <option>Local Brand</option><option>No Battery (New)</option><option>Other</option>
           </select>
         </div>
+      </div>
+      <div class="frow">
         <div class="fld"><label>Lead Source</label>
           <select id="f-source">
-            <option value="">-- Select --</option>
-            <option>Walk-in</option><option>Referral</option><option>Exhibition / Mela</option>
+            <option value="">-- Source --</option>
+            <option>Walk-in</option><option>Referral</option><option>Exhibition</option>
             <option>Social Media</option><option>WhatsApp</option>
             <option>Cold Call</option><option>Dealer</option><option>Other</option>
           </select>
         </div>
-      </div>
-
-      <div class="sb-sec">
-        <div class="sb-sec-title">Stage & Follow-up</div>
-        <div class="fld">
-          <label>Stage <span class="req">*</span></label>
-          <div class="stage-pills">
-            <div class="sp sel" data-s="New Lead"        onclick="selStage(this)">🆕 New Lead</div>
-            <div class="sp"     data-s="Quotation Sent"  onclick="selStage(this)">📄 Quotation</div>
-            <div class="sp"     data-s="Follow-up"       onclick="selStage(this)">📞 Follow-up</div>
-            <div class="sp"     data-s="Order Confirmed" onclick="selStage(this)">✅ Won</div>
-            <div class="sp"     data-s="Lost"            onclick="selStage(this)">❌ Lost</div>
-          </div>
-          <input type="hidden" id="f-stage" value="New Lead">
-        </div>
-        <div class="fld"><label>Next Follow-up Date</label><input type="date" id="f-followup"></div>
-        <div class="fld"><label>Notes / Remarks</label><textarea id="f-notes" placeholder="Koi important info..."></textarea></div>
         <div class="fld"><label>Assigned To</label>
           <select id="f-assigned">
             <option value="">-- Select --</option>
@@ -354,202 +389,131 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
         </div>
       </div>
 
-      <button class="btn-add" id="add-btn" onclick="addLead()">⚡ Add to Pipeline</button>
+      <div class="form-sec-title">Stage & Follow-up</div>
+      <div class="fld">
+        <label>Stage <span class="req">*</span></label>
+        <div class="stage-pills">
+          <div class="sp sel" data-s="New Lead"        onclick="selStage(this)">🆕 New Lead</div>
+          <div class="sp"     data-s="Quotation Sent"  onclick="selStage(this)">📄 Quotation</div>
+          <div class="sp"     data-s="Follow-up"       onclick="selStage(this)">📞 Follow-up</div>
+          <div class="sp"     data-s="Order Confirmed" onclick="selStage(this)">✅ Won</div>
+          <div class="sp"     data-s="Lost"            onclick="selStage(this)">❌ Lost</div>
+        </div>
+        <input type="hidden" id="f-stage" value="New Lead">
+      </div>
+      <div class="frow">
+        <div class="fld"><label>Follow-up Date</label><input type="date" id="f-followup"></div>
+      </div>
+      <div class="fld"><label>Notes / Remarks</label><textarea id="f-notes" placeholder="Koi important info..."></textarea></div>
     </div>
-  </div>
-
-  <!-- MAIN PANEL -->
-  <div class="main">
-
-    <!-- KPI -->
-    <div class="kpi-row">
-      <div class="kpi kpi-total"><div class="kpi-val" id="k-total">0</div><div class="kpi-lbl">Total Leads</div></div>
-      <div class="kpi kpi-new">  <div class="kpi-val" id="k-new">0</div>  <div class="kpi-lbl">New Leads</div></div>
-      <div class="kpi kpi-quot"> <div class="kpi-val" id="k-quot">0</div> <div class="kpi-lbl">Quotation</div></div>
-      <div class="kpi kpi-follow"><div class="kpi-val" id="k-fol">0</div> <div class="kpi-lbl">Follow-up</div></div>
-      <div class="kpi kpi-won">  <div class="kpi-val" id="k-won">0</div>  <div class="kpi-lbl">Won</div></div>
-      <div class="kpi kpi-lost"> <div class="kpi-val" id="k-lost">0</div> <div class="kpi-lbl">Lost</div></div>
+    <div class="mfooter">
+      <button onclick="closeAddModal()" style="background:var(--bg);color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:.48rem .9rem;font-size:.74rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Cancel</button>
+      <button class="btn-primary" id="add-btn" onclick="addLead()">⚡ Add to Pipeline</button>
     </div>
-
-    <div class="pipe-bar" id="pipe-bar"></div>
-
-    <!-- Filters -->
-    <div class="filter-row">
-      <button class="fb fb-all on"  onclick="setFilter('All',this)">All</button>
-      <button class="fb fb-new"     onclick="setFilter('New Lead',this)">🆕 New</button>
-      <button class="fb fb-quot"    onclick="setFilter('Quotation Sent',this)">📄 Quotation</button>
-      <button class="fb fb-fol"     onclick="setFilter('Follow-up',this)">📞 Follow-up</button>
-      <button class="fb fb-won"     onclick="setFilter('Order Confirmed',this)">✅ Won</button>
-      <button class="fb fb-lost"    onclick="setFilter('Lost',this)">❌ Lost</button>
-      <input class="fsearch" type="text" id="search-inp" placeholder="Search name / company / phone..." oninput="renderLeads()">
-    </div>
-
-    <!-- Sort -->
-    <div class="sort-row">
-      Sort:
-      <button class="sort-btn on" id="sort-date"    onclick="setSort('date',this)">Latest First</button>
-      <button class="sort-btn"    id="sort-name"    onclick="setSort('name',this)">Name A–Z</button>
-      <button class="sort-btn"    id="sort-followup" onclick="setSort('followup',this)">Follow-up Date</button>
-      <button class="sort-btn"    id="sort-stage"   onclick="setSort('stage',this)">Stage</button>
-    </div>
-
-    <div class="leads" id="leads-list"></div>
-  </div>
-</div>
-
-<!-- MODAL -->
-<div class="moverlay" id="modal" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
-    <div class="mhead">
-      <div class="mtitle" id="modal-title">Lead Details</div>
-      <button class="mclose" onclick="closeModal()">✕</button>
-    </div>
-    <div class="mbody" id="modal-body"></div>
-    <div class="mfooter" id="modal-footer"></div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ── CONFIG ──
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyV0Y8xU1KjqOjjCbhm93u8m-zau60rOYEiHARB8oq1GBeUT9kaoLlEWUwCkX-Oqo16/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyV0Y8xU1KjqOjjCbhm93u8m-zau60rOYEiHARB8oq1GBeUT9kaoLlEWUwCkX-Oqo16/exec';
 
-// ── CONSTANTS ──
-const MAIN_STAGES = ['New Lead','Quotation Sent','Follow-up','Order Confirmed'];
-const NEXT_STAGE  = {'New Lead':'Quotation Sent','Quotation Sent':'Follow-up','Follow-up':'Order Confirmed'};
-const S_EMOJI     = {'New Lead':'🆕','Quotation Sent':'📄','Follow-up':'📞','Order Confirmed':'✅','Lost':'❌'};
-const S_SHORT     = {'New Lead':'New Lead','Quotation Sent':'Quotation','Follow-up':'Follow-up','Order Confirmed':'Won','Lost':'Lost'};
-const S_COLOR     = {
-  'New Lead':       {bar:'bar-new',  badge:'background:#e0f5fd;color:#0891c2',dot:'#0891c2'},
-  'Quotation Sent': {bar:'bar-quot', badge:'background:#f3effe;color:#6d3be8',dot:'#6d3be8'},
-  'Follow-up':      {bar:'bar-fol',  badge:'background:#fff8eb;color:#c97a00',dot:'#c97a00'},
-  'Order Confirmed':{bar:'bar-won',  badge:'background:#edfaf5;color:#0d9e6e',dot:'#0d9e6e'},
-  'Lost':           {bar:'bar-lost', badge:'background:#fff0f0;color:#d43b3b',dot:'#d43b3b'},
+const MAIN_STAGES=['New Lead','Quotation Sent','Follow-up','Order Confirmed'];
+const NEXT_STAGE={'New Lead':'Quotation Sent','Quotation Sent':'Follow-up','Follow-up':'Order Confirmed'};
+const S_EMOJI={'New Lead':'🆕','Quotation Sent':'📄','Follow-up':'📞','Order Confirmed':'✅','Lost':'❌'};
+const S_SHORT={'New Lead':'New Lead','Quotation Sent':'Quotation','Follow-up':'Follow-up','Order Confirmed':'Won','Lost':'Lost'};
+const S_COLOR={
+  'New Lead':       {badge:'background:#e0f5fd;color:#0891c2'},
+  'Quotation Sent': {badge:'background:#f3effe;color:#6d3be8'},
+  'Follow-up':      {badge:'background:#fff8eb;color:#c97a00'},
+  'Order Confirmed':{badge:'background:#edfaf5;color:#0d9e6e'},
+  'Lost':           {badge:'background:#fff0f0;color:#d43b3b'},
 };
+const GS_HEADERS=['ID','Date Added','Customer Name','Phone','Email','Company','City','State','Application','Voltage','Capacity','No. of Batteries','Existing Brand','Lead Source','Budget','Stage','Follow-up Date','Assigned To','Notes','Last Updated'];
 
-// Google Sheet column headers — exact order matches ROW_VALS below
-const GS_HEADERS = [
-  'ID','Date Added','Customer Name','Phone','Email',
-  'Company','City','State',
-  'Application Type','Voltage','Capacity (Ah)','No. of Batteries',
-  'Existing Brand','Lead Source','Budget Range',
-  'Current Stage','Follow-up Date','Assigned To',
-  'Notes','Last Updated'
-];
+let FILTER='All', SORT='date';
 
-let FILTER = 'All';
-let SORT   = 'date';
-
-function getLeads(){ try{ return JSON.parse(localStorage.getItem('litpax_v2')||'[]'); }catch{ return []; } }
-function saveLeads(l){ localStorage.setItem('litpax_v2', JSON.stringify(l)); }
-function td(){ return new Date().toISOString().slice(0,10); }
-
+function getLeads(){try{return JSON.parse(localStorage.getItem('litpax_v2')||'[]');}catch{return[];}}
+function saveLeads(l){localStorage.setItem('litpax_v2',JSON.stringify(l));}
+function td(){return new Date().toISOString().slice(0,10);}
 function toast(msg,type=''){
   const t=document.getElementById('toast');
   t.textContent=msg; t.className='toast show'+(type?' '+type:'');
-  setTimeout(()=>t.classList.remove('show'),2800);
+  setTimeout(()=>t.classList.remove('show'),2600);
 }
 
 // ── FORM ──
 function selStage(el){
-  document.querySelectorAll('.sidebar .sp').forEach(p=>p.classList.remove('sel'));
+  document.querySelectorAll('#modal-add .sp').forEach(p=>p.classList.remove('sel'));
   el.classList.add('sel');
   document.getElementById('f-stage').value=el.dataset.s;
 }
+function openAddModal(){document.getElementById('modal-add').classList.add('open');}
+function closeAddModal(){document.getElementById('modal-add').classList.remove('open');}
 
 function addLead(){
-  const name =document.getElementById('f-name').value.trim();
+  const name=document.getElementById('f-name').value.trim();
   const phone=document.getElementById('f-phone').value.trim();
-  const oem  =document.getElementById('f-oem').value;
+  const oem=document.getElementById('f-oem').value;
   const stage=document.getElementById('f-stage').value;
-  if(!name||!phone||!oem||!stage){ toast('Name, Phone aur Application required hai','err'); return; }
-
+  if(!name||!phone||!oem||!stage){toast('Name, Phone aur Application required hai','err');return;}
   const btn=document.getElementById('add-btn');
   btn.disabled=true; btn.textContent='⏳ Adding...';
-
   const lead={
-    id:'LD'+Date.now(), date:td(),
-    name, phone,
-    email:    document.getElementById('f-email').value.trim(),
-    company:  document.getElementById('f-company').value.trim(),
-    city:     document.getElementById('f-city').value.trim(),
-    state:    document.getElementById('f-state').value.trim(),
-    oem,
-    voltage:  document.getElementById('f-voltage').value,
-    capacity: document.getElementById('f-capacity').value,
-    fleet:    document.getElementById('f-fleet').value,
-    model:    document.getElementById('f-model').value,
-    source:   document.getElementById('f-source').value,
-    amount:   document.getElementById('f-amount').value,
-    stage,
-    followup: document.getElementById('f-followup').value,
-    notes:    document.getElementById('f-notes').value.trim(),
-    assigned: document.getElementById('f-assigned').value,
-    history:  [{stage,date:td(),note:'Lead added'}],
+    id:'LD'+Date.now(),date:td(),name,phone,
+    email:document.getElementById('f-email').value.trim(),
+    company:document.getElementById('f-company').value.trim(),
+    city:document.getElementById('f-city').value.trim(),
+    state:document.getElementById('f-state').value.trim(),
+    oem,voltage:document.getElementById('f-voltage').value,
+    capacity:document.getElementById('f-capacity').value,
+    fleet:document.getElementById('f-fleet').value,
+    model:document.getElementById('f-model').value,
+    source:document.getElementById('f-source').value,
+    amount:document.getElementById('f-amount').value,
+    stage,followup:document.getElementById('f-followup').value,
+    notes:document.getElementById('f-notes').value.trim(),
+    assigned:document.getElementById('f-assigned').value,
+    history:[{stage,date:td(),note:'Lead added'}],
     updatedAt:td()
   };
-
   const leads=getLeads(); leads.unshift(lead); saveLeads(leads);
-  renderLeads(); updateStats();
-
+  renderTable(); updateStats();
   if(SCRIPT_URL) syncToSheets('addLead',lead).then(ok=>toast(ok?'✅ Added & synced!':'💾 Saved locally',ok?'ok':''));
   else toast('✅ Lead added — '+name,'ok');
-
-  resetForm();
+  resetForm(); closeAddModal();
   btn.disabled=false; btn.textContent='⚡ Add to Pipeline';
 }
 
 function resetForm(){
-  ['f-name','f-phone','f-email','f-company','f-city','f-state','f-fleet','f-notes','f-followup'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.value='';
-  });
-  ['f-oem','f-voltage','f-capacity','f-model','f-source','f-assigned','f-amount'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.value='';
-  });
-  document.querySelectorAll('.sidebar .sp').forEach(p=>p.classList.remove('sel'));
-  document.querySelector('.sidebar .sp[data-s="New Lead"]').classList.add('sel');
+  ['f-name','f-phone','f-email','f-company','f-city','f-state','f-fleet','f-notes','f-followup'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['f-oem','f-voltage','f-capacity','f-model','f-source','f-assigned','f-amount'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.querySelectorAll('#modal-add .sp').forEach(p=>p.classList.remove('sel'));
+  document.querySelector('#modal-add .sp[data-s="New Lead"]').classList.add('sel');
   document.getElementById('f-stage').value='New Lead';
-}
-
-// ── JOURNEY BAR ──
-function buildJourney(lead){
-  const isLost=lead.stage==='Lost';
-  const curIdx=MAIN_STAGES.indexOf(lead.stage);
-  let html='<div class="journey">';
-  MAIN_STAGES.forEach((s,i)=>{
-    const isDone  =!isLost&&i<curIdx;
-    const isActive=!isLost&&i===curIdx;
-    const sc=S_COLOR[s];
-    let dc='',ds='',dl='';
-    if(isDone){dc='done';dl='✓';}
-    if(isActive){dc='active';dl='●';ds=`border-color:${sc.dot};background:${sc.dot};color:#fff;`;}
-    html+=`<div class="jstep${isDone?' done':''}" onclick="event.stopPropagation();quickStage('${lead.id}','${s}')" title="Move to: ${s}">
-      <div class="jdot ${dc}" style="${ds}">${dl}</div>
-      <div class="jlbl${isActive?' active':''}">${S_SHORT[s]}</div>
-    </div>`;
-  });
-  if(isLost) html+=`<div class="jstep" style="flex:0;margin-left:6px"><div class="jdot jlost">✕</div><div class="jlbl" style="color:var(--red)">Lost</div></div>`;
-  return html+'</div>';
 }
 
 // ── FILTER / SORT ──
 function setFilter(f,el){
   FILTER=f;
-  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
-  el.classList.add('on');
-  renderLeads();
+  document.querySelectorAll('.kpi').forEach(k=>k.classList.remove('active-kpi'));
+  el.classList.add('active-kpi');
+  renderTable();
+}
+function setSort(s,el){SORT=s;document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('on'));el.classList.add('on');renderTable();}
+
+// ── FOLLOW-UP HTML ──
+function fuHtml(followup){
+  if(!followup) return '<span class="fu-none">—</span>';
+  const diff=Math.round((new Date(followup)-new Date(td()))/86400000);
+  if(diff<0)        return `<span class="fu-over">⚠️ Overdue ${Math.abs(diff)}d</span>`;
+  if(diff===0)      return `<span class="fu-due">📞 Aaj!</span>`;
+  if(diff<=2)       return `<span class="fu-due">📞 ${diff}d baad</span>`;
+  return `<span class="fu-ok">📅 ${followup}</span>`;
 }
 
-function setSort(s,el){
-  SORT=s;
-  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('on'));
-  el.classList.add('on');
-  renderLeads();
-}
-
-// ── RENDER ──
-function renderLeads(){
+// ── RENDER TABLE ──
+function renderTable(){
   let leads=getLeads();
   const q=(document.getElementById('search-inp')?.value||'').toLowerCase();
   leads=leads.filter(l=>{
@@ -557,82 +521,47 @@ function renderLeads(){
     const ms=!q||l.name.toLowerCase().includes(q)||(l.company||'').toLowerCase().includes(q)||(l.phone||'').includes(q);
     return mf&&ms;
   });
-
-  // Sort
-  if(SORT==='name')     leads.sort((a,b)=>a.name.localeCompare(b.name));
+  if(SORT==='name') leads.sort((a,b)=>a.name.localeCompare(b.name));
   else if(SORT==='followup') leads.sort((a,b)=>(a.followup||'9999')>(b.followup||'9999')?1:-1);
-  else if(SORT==='stage')    leads.sort((a,b)=>MAIN_STAGES.indexOf(a.stage)-MAIN_STAGES.indexOf(b.stage));
+  else if(SORT==='stage') leads.sort((a,b)=>MAIN_STAGES.indexOf(a.stage)-MAIN_STAGES.indexOf(b.stage));
   else leads.sort((a,b)=>b.id>a.id?1:-1);
 
-  const list=document.getElementById('leads-list');
+  const body=document.getElementById('lt-body');
   if(!leads.length){
-    list.innerHTML=`<div class="empty-state"><div class="empty-icon">🎯</div><div class="empty-title">Koi lead nahi</div><div style="font-size:.72rem;color:var(--muted);margin-top:.2rem">Filter change karo ya naya lead add karo</div></div>`;
+    body.innerHTML=`<div class="empty-state"><div class="empty-icon">🎯</div><div class="empty-title">Koi lead nahi</div><div style="font-size:.7rem;color:var(--muted);margin-top:.14rem">Upar filter click karo ya naya lead add karo</div></div>`;
     return;
   }
-
-  const today=td();
-  list.innerHTML=leads.map(l=>{
-    const sc=S_COLOR[l.stage]||S_COLOR['New Lead'];
-    let followHtml='';
-    if(l.followup){
-      const diff=Math.round((new Date(l.followup)-new Date(today))/86400000);
-      if(diff<0)        followHtml=`<span class="follow-lbl f-over">⚠️ Overdue ${Math.abs(diff)}d</span>`;
-      else if(diff===0) followHtml=`<span class="follow-lbl f-due">📞 Aaj follow-up!</span>`;
-      else if(diff<=2)  followHtml=`<span class="follow-lbl f-due">📞 ${diff}d baad</span>`;
-      else              followHtml=`<span class="follow-lbl f-ok">📅 ${l.followup}</span>`;
-    }
-    const ns=NEXT_STAGE[l.stage];
-    const nextBtn=ns?`<button class="qb next" onclick="event.stopPropagation();quickStage('${l.id}','${ns}')">→ ${S_SHORT[ns]}</button>`:'';
-    const hist=(l.history||[]).slice(-3).reverse();
-    const histHtml=hist.length>1?`<div class="lc-hist"><div class="lc-hist-title">History</div>${hist.map(h=>`<div class="lc-hist-row"><span>${h.date}</span><b>${h.stage}</b>${h.note?`<span style="margin-left:.3rem">— ${h.note}</span>`:''}</div>`).join('')}</div>`:'';
-
-    return `<div class="lcard" onclick="openModal('${l.id}')">
-      <div class="lc-wrap">
-        <div class="lc-bar ${sc.bar}"></div>
-        <div class="lc-body">
-          <div class="lc-top-row">
-            <div>
-              <div class="lc-name">${l.name}</div>
-              <div class="lc-co">${l.company||'Individual'}${l.city?' · '+l.city:''}</div>
-            </div>
-            <span class="badge" style="${sc.badge}">${S_EMOJI[l.stage]||''} ${l.stage}</span>
-          </div>
-          ${buildJourney(l)}
-          <div class="lc-chips">
-            <span class="chip">📱 ${l.phone}</span>
-            <span class="chip">🏷️ ${l.oem}</span>
-            ${l.fleet?`<span class="chip">🔋 ${l.fleet} units</span>`:''}
-            ${l.voltage||l.capacity?`<span class="chip">⚡ ${[l.voltage,l.capacity].filter(Boolean).join(' ')}</span>`:''}
-            ${l.amount?`<span class="chip">💰 ${l.amount}</span>`:''}
-            ${l.assigned?`<span class="chip">👤 ${l.assigned}</span>`:''}
-            ${l.source?`<span class="chip">🔗 ${l.source}</span>`:''}
-          </div>
-          <div class="lc-foot" onclick="event.stopPropagation()">
-            <div>${followHtml}</div>
-            <div class="qbtns">
-              ${nextBtn}
-              <button class="qb won"  onclick="event.stopPropagation();quickStage('${l.id}','Order Confirmed')">✅ Won</button>
-              <button class="qb lost" onclick="event.stopPropagation();quickStage('${l.id}','Lost')">❌ Lost</button>
-            </div>
-          </div>
-          ${l.notes?`<div class="lc-notes">💬 ${l.notes}</div>`:''}
-          ${histHtml}
-        </div>
+  const sc=l=>S_COLOR[l.stage]||S_COLOR['New Lead'];
+  const ns=l=>NEXT_STAGE[l.stage];
+  body.innerHTML=leads.map(l=>`
+    <div class="lt-row" onclick="openDetail('${l.id}')">
+      <div>
+        <div class="lt-name">${l.name}</div>
+        <div class="lt-co">${[l.company,l.city].filter(Boolean).join(' · ')||'—'}</div>
+        <div class="lt-phone">${l.phone}</div>
       </div>
-    </div>`;
-  }).join('');
+      <div class="lt-app">${l.oem||'—'}<br><span style="font-size:.62rem;color:var(--muted)">${[l.voltage,l.capacity].filter(Boolean).join(' ')||''}</span></div>
+      <div><span class="badge" style="${sc(l).badge}">${S_EMOJI[l.stage]} ${l.stage}</span></div>
+      <div>${fuHtml(l.followup)}</div>
+      <div class="lt-asgn">${l.assigned||'—'}</div>
+      <div class="row-actions" onclick="event.stopPropagation()">
+        ${ns(l)?`<button class="ra" onclick="quickStage('${l.id}','${ns(l)}')">→ ${S_SHORT[ns(l)]}</button>`:''}
+        <button class="ra won"  onclick="quickStage('${l.id}','Order Confirmed')">✅</button>
+        <button class="ra lost" onclick="quickStage('${l.id}','Lost')">❌</button>
+      </div>
+    </div>`).join('');
 }
 
 // ── QUICK STAGE ──
 function quickStage(id,stage){
   const leads=getLeads();
   const i=leads.findIndex(l=>l.id===id);
-  if(i<0) return;
+  if(i<0)return;
   const prev=leads[i].stage;
   leads[i].stage=stage; leads[i].updatedAt=td();
   leads[i].history=leads[i].history||[];
   leads[i].history.push({stage,date:td(),note:prev+' → '+stage});
-  saveLeads(leads); renderLeads(); updateStats();
+  saveLeads(leads); renderTable(); updateStats();
   toast(S_EMOJI[stage]+' '+stage,'ok');
 }
 
@@ -641,20 +570,16 @@ function updateStats(){
   const leads=getLeads();
   const c=s=>leads.filter(l=>l.stage===s).length;
   document.getElementById('k-total').textContent=leads.length;
-  document.getElementById('k-new').textContent  =c('New Lead');
-  document.getElementById('k-quot').textContent =c('Quotation Sent');
-  document.getElementById('k-fol').textContent  =c('Follow-up');
-  document.getElementById('k-won').textContent  =c('Order Confirmed');
-  document.getElementById('k-lost').textContent =c('Lost');
-
+  document.getElementById('k-new').textContent=c('New Lead');
+  document.getElementById('k-quot').textContent=c('Quotation Sent');
+  document.getElementById('k-fol').textContent=c('Follow-up');
+  document.getElementById('k-won').textContent=c('Order Confirmed');
+  document.getElementById('k-lost').textContent=c('Lost');
   const won=c('Order Confirmed');
-  const rate=leads.length?Math.round(won/leads.length*100):0;
-  const dueToday=leads.filter(l=>l.followup===td()).length;
   document.getElementById('t-total').textContent=leads.length;
-  document.getElementById('t-won').textContent  =won;
-  document.getElementById('t-rate').textContent =rate+'%';
-  document.getElementById('t-due').textContent  =dueToday;
-
+  document.getElementById('t-won').textContent=won;
+  document.getElementById('t-rate').textContent=(leads.length?Math.round(won/leads.length*100):0)+'%';
+  document.getElementById('t-due').textContent=leads.filter(l=>l.followup===td()).length;
   const stages=['New Lead','Quotation Sent','Follow-up','Order Confirmed','Lost'];
   const colors=['#0891c2','#6d3be8','#c97a00','#0d9e6e','#d43b3b'];
   const total=leads.length||1;
@@ -664,56 +589,64 @@ function updateStats(){
   }).join('');
 }
 
-// ── GOOGLE SHEET ROW BUILDER ──
-function buildSheetRow(l){
-  return [
-    l.id,
-    l.date,
-    l.name,
-    l.phone,
-    l.email||'',
-    l.company||'',
-    l.city||'',
-    l.state||'',
-    l.oem||'',
-    l.voltage||'',
-    l.capacity||'',
-    l.fleet||'',
-    l.model||'',
-    l.source||'',
-    l.amount||'',
-    l.stage,
-    l.followup||'',
-    l.assigned||'',
-    l.notes||'',
-    l.updatedAt||l.date
-  ];
+// ── JOURNEY HTML ──
+function buildJourney(lead){
+  const isLost=lead.stage==='Lost';
+  const curIdx=MAIN_STAGES.indexOf(lead.stage);
+  let html='<div class="journey">';
+  MAIN_STAGES.forEach((s,i)=>{
+    const isDone=!isLost&&i<curIdx;
+    const isActive=!isLost&&i===curIdx;
+    const sc=S_COLOR[s];
+    let dc='',ds='',dl='';
+    if(isDone){dc='done';dl='✓';}
+    if(isActive){
+      const dotColors={'New Lead':'#0891c2','Quotation Sent':'#6d3be8','Follow-up':'#c97a00','Order Confirmed':'#0d9e6e'};
+      dc='active';dl='●';ds=`border-color:${dotColors[s]};background:${dotColors[s]};color:#fff;`;
+    }
+    html+=`<div class="jstep${isDone?' done':''}" onclick="setDetailStage('${s}')" title="Move to: ${s}">
+      <div class="jdot ${dc}" style="${ds}">${dl}</div>
+      <div class="jlbl${isActive?' active':''}">${S_SHORT[s]}</div>
+    </div>`;
+  });
+  if(isLost) html+=`<div class="jstep" style="flex:0;margin-left:8px"><div class="jdot jlost">✕</div><div class="jlbl" style="color:var(--red)">Lost</div></div>`;
+  return html+'</div>';
 }
 
-// ── MODAL ──
-function openModal(id){
+// ── DETAIL MODAL ──
+function buildSheetRow(l){
+  return [l.id,l.date,l.name,l.phone,l.email||'',l.company||'',l.city||'',l.state||'',l.oem||'',l.voltage||'',l.capacity||'',l.fleet||'',l.model||'',l.source||'',l.amount||'',l.stage,l.followup||'',l.assigned||'',l.notes||'',l.updatedAt||l.date];
+}
+
+function openDetail(id){
   const leads=getLeads();
   const l=leads.find(x=>x.id===id);
-  if(!l) return;
+  if(!l)return;
   const sc=S_COLOR[l.stage]||S_COLOR['New Lead'];
-  const ROW_VALS=buildSheetRow(l);
+  const ROW=buildSheetRow(l);
 
-  document.getElementById('modal-title').textContent=l.name+(l.company?' · '+l.company:'');
+  document.getElementById('detail-title').textContent=l.name+(l.company?' · '+l.company:'');
 
-  document.getElementById('modal-body').innerHTML=`
-    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem">
-      <span class="badge" style="${sc.badge};font-size:.7rem;padding:.25rem .7rem">${S_EMOJI[l.stage]||''} ${l.stage}</span>
-      <span style="font-size:.68rem;color:var(--muted)">Added: ${l.date}</span>
-      <span style="font-size:.68rem;color:var(--muted)">· Updated: ${l.updatedAt||l.date}</span>
+  document.getElementById('detail-body').innerHTML=`
+    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem;flex-wrap:wrap">
+      <span class="badge" style="${sc.badge};font-size:.68rem;padding:.22rem .7rem">${S_EMOJI[l.stage]} ${l.stage}</span>
+      <span style="font-size:.65rem;color:var(--muted)">Added: ${l.date}</span>
+      <span style="font-size:.65rem;color:var(--muted)">· Updated: ${l.updatedAt||l.date}</span>
     </div>
 
+    <div class="sec-title">Pipeline Journey</div>
     ${buildJourney(l)}
 
+    <div class="sec-title">Customer Details</div>
     <div class="dgrid">
       <div class="ditem"><div class="dlbl">Phone</div><div class="dval">${l.phone}</div></div>
       <div class="ditem"><div class="dlbl">Email</div><div class="dval">${l.email||'—'}</div></div>
       <div class="ditem"><div class="dlbl">Company</div><div class="dval">${l.company||'—'}</div></div>
       <div class="ditem"><div class="dlbl">Location</div><div class="dval">${[l.city,l.state].filter(Boolean).join(', ')||'—'}</div></div>
+    </div>
+
+    <div class="sec-title">Battery Requirement</div>
+    <div class="dgrid">
       <div class="ditem"><div class="dlbl">Application</div><div class="dval">${l.oem||'—'}</div></div>
       <div class="ditem"><div class="dlbl">Voltage / Capacity</div><div class="dval">${[l.voltage,l.capacity].filter(Boolean).join(' / ')||'—'}</div></div>
       <div class="ditem"><div class="dlbl">No. of Batteries</div><div class="dval">${l.fleet||'—'}</div></div>
@@ -721,131 +654,113 @@ function openModal(id){
       <div class="ditem"><div class="dlbl">Budget</div><div class="dval">${l.amount||'—'}</div></div>
       <div class="ditem"><div class="dlbl">Lead Source</div><div class="dval">${l.source||'—'}</div></div>
       <div class="ditem"><div class="dlbl">Assigned To</div><div class="dval">${l.assigned||'—'}</div></div>
-      <div class="ditem"><div class="dlbl">Next Follow-up</div><div class="dval">${l.followup||'—'}</div></div>
+      <div class="ditem"><div class="dlbl">Follow-up Date</div><div class="dval">${fuHtml(l.followup)}</div></div>
     </div>
 
-    ${l.notes?`<div style="background:var(--bg);border-radius:7px;padding:.6rem .8rem;font-size:.78rem;color:var(--ink3);margin-bottom:.85rem;font-style:italic">💬 ${l.notes}</div>`:''}
+    ${l.notes?`<div style="background:var(--amber-l);border:1px solid var(--amber-m);border-radius:7px;padding:.55rem .8rem;font-size:.76rem;color:var(--ink3);margin-bottom:.85rem">💬 ${l.notes}</div>`:''}
 
-    <div class="mlbl">Update Stage</div>
+    <div class="sec-title">Update Stage</div>
     <div class="stage-btns">
       ${['New Lead','Quotation Sent','Follow-up','Order Confirmed','Lost'].map(s=>`
-        <button class="sb2 ${l.stage===s?'cur':''}" data-s="${s}" onclick="setModalStage('${s}')">${S_EMOJI[s]||''} ${s}</button>`).join('')}
+        <button class="sb2 ${l.stage===s?'cur':''}" data-s="${s}" onclick="setDetailStage('${s}')">${S_EMOJI[s]} ${s}</button>`).join('')}
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.9rem">
-      <div>
-        <div class="mlbl">Follow-up Date</div>
-        <input type="date" id="modal-followup" value="${l.followup||''}" style="background:var(--bg);border:1.5px solid var(--border);border-radius:7px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:.45rem .7rem;width:100%">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-bottom:.85rem">
+      <div><div class="mlbl">Follow-up Date</div>
+        <input type="date" id="d-followup" value="${l.followup||''}" style="background:var(--bg);border:1.5px solid var(--border);border-radius:6px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.42rem .65rem;width:100%">
       </div>
-      <div>
-        <div class="mlbl">Add Note</div>
-        <input type="text" id="modal-note" placeholder="Quick note..." style="background:var(--bg);border:1.5px solid var(--border);border-radius:7px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:.45rem .7rem;width:100%">
+      <div><div class="mlbl">Quick Note</div>
+        <input type="text" id="d-note" placeholder="Note daalo..." style="background:var(--bg);border:1.5px solid var(--border);border-radius:6px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.42rem .65rem;width:100%">
       </div>
     </div>
 
-    <div style="margin-top:1rem">
-      <div class="mlbl">History</div>
-      <div style="display:flex;flex-direction:column;gap:.25rem;max-height:110px;overflow-y:auto;background:var(--bg);border-radius:7px;padding:.5rem .7rem">
-        ${(l.history||[]).slice().reverse().map(h=>`
-          <div style="display:flex;gap:.5rem;font-size:.68rem;padding:2px 0;border-bottom:1px dashed var(--border)">
-            <span style="color:var(--muted);white-space:nowrap;min-width:72px">${h.date}</span>
-            <span style="font-weight:600;color:var(--ink3)">${h.stage}</span>
-            ${h.note?`<span style="color:var(--muted)">— ${h.note}</span>`:''}
-          </div>`).join('')}
-      </div>
+    <div class="sec-title">History</div>
+    <div class="hist-list">
+      ${(l.history||[]).slice().reverse().map(h=>`
+        <div class="hist-row">
+          <span class="hist-date">${h.date}</span>
+          <span class="hist-stage">${h.stage}</span>
+          ${h.note?`<span class="hist-note">— ${h.note}</span>`:''}
+        </div>`).join('')}
     </div>
 
-    <!-- GOOGLE SHEET COPY TABLE -->
-    <div class="copy-section" style="margin-top:1rem">
+    <div class="copy-wrap">
       <div class="copy-head">
         <div class="copy-head-title">📋 Google Sheet — Copy &amp; Paste</div>
-        <div class="copy-btns">
+        <div class="cbtns">
           <button class="cbtn cbtn-row"  onclick="copySheet('row')">Copy Data Row</button>
-          <button class="cbtn cbtn-full" onclick="copySheet('full')">Copy Header + Row</button>
+          <button class="cbtn cbtn-full" onclick="copySheet('full')">Header + Row</button>
         </div>
       </div>
-      <table class="copy-table">
+      <table class="ctable">
         ${GS_HEADERS.map((h,i)=>`
         <tr>
-          <td class="ct-col">${String.fromCharCode(65+i)} · ${h}</td>
-          <td class="ct-val ${ROW_VALS[i]?'':'empty'}">${ROW_VALS[i]||'(empty)'}</td>
+          <td class="ct-h">${String.fromCharCode(65+i)} · ${h}</td>
+          <td class="ct-v ${ROW[i]?'':'ct-mt'}">${ROW[i]||'(empty)'}</td>
         </tr>`).join('')}
       </table>
     </div>`;
 
-  // Store for copy
+  window._detailId=id;
   window._sheetData={
-    row: ROW_VALS.map(v=>String(v).replace(/\t/g,' ')).join('\t'),
-    full: GS_HEADERS.join('\t')+'\n'+ROW_VALS.map(v=>String(v).replace(/\t/g,' ')).join('\t')
+    row:ROW.map(v=>String(v).replace(/\t/g,' ')).join('\t'),
+    full:GS_HEADERS.join('\t')+'\n'+ROW.map(v=>String(v).replace(/\t/g,' ')).join('\t')
   };
 
-  document.getElementById('modal-footer').innerHTML=`
-    <button onclick="deleteLead('${l.id}')" style="background:var(--red-l);color:var(--red);border:1px solid var(--red-m);border-radius:7px;padding:.5rem .9rem;font-size:.74rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">🗑 Delete</button>
-    <button onclick="saveModal('${l.id}')" style="background:var(--blue);color:#fff;border:none;border-radius:7px;padding:.5rem 1.1rem;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 2px 8px rgba(26,79,214,.25)">💾 Save Update</button>`;
+  document.getElementById('detail-footer').innerHTML=`
+    <button class="btn-danger" onclick="deleteLead('${l.id}')">🗑 Delete</button>
+    <button class="btn-save" onclick="saveDetail('${l.id}')">💾 Save Update</button>`;
 
-  document.getElementById('modal').classList.add('open');
+  document.getElementById('modal-detail').classList.add('open');
 }
 
-function setModalStage(s){
+function setDetailStage(s){
   document.querySelectorAll('.sb2').forEach(b=>b.classList.remove('cur'));
   document.querySelector(`.sb2[data-s="${s}"]`)?.classList.add('cur');
 }
 
-function saveModal(id){
+function saveDetail(id){
   const leads=getLeads();
   const i=leads.findIndex(l=>l.id===id);
-  if(i<0) return;
-  const ns  =document.querySelector('.sb2.cur')?.dataset.s||leads[i].stage;
-  const nf  =document.getElementById('modal-followup').value;
-  const note=document.getElementById('modal-note').value.trim();
+  if(i<0)return;
+  const ns=document.querySelector('.sb2.cur')?.dataset.s||leads[i].stage;
+  const nf=document.getElementById('d-followup').value;
+  const note=document.getElementById('d-note').value.trim();
   const prev=leads[i].stage;
   leads[i].stage=ns; leads[i].followup=nf; leads[i].updatedAt=td();
   leads[i].history=leads[i].history||[];
   if(note||ns!==prev) leads[i].history.push({stage:ns,date:td(),note:note||(prev!==ns?prev+' → '+ns:'Updated')});
   if(note) leads[i].notes=note;
-  saveLeads(leads); closeModal(); renderLeads(); updateStats();
+  saveLeads(leads); closeDetail(); renderTable(); updateStats();
   if(SCRIPT_URL) syncToSheets('updateLead',{id,stage:ns,followup:nf,notes:note}).then(ok=>toast(ok?'✅ Updated & synced!':'💾 Updated locally',ok?'ok':''));
-  else toast('✅ Lead updated!','ok');
+  else toast('✅ Updated!','ok');
 }
 
 function deleteLead(id){
-  if(!confirm('Is lead ko delete karna hai?')) return;
+  if(!confirm('Delete karna hai?'))return;
   saveLeads(getLeads().filter(l=>l.id!==id));
-  closeModal(); renderLeads(); updateStats();
-  toast('Lead deleted');
+  closeDetail(); renderTable(); updateStats(); toast('Lead deleted');
 }
 
-function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+function closeDetail(){document.getElementById('modal-detail').classList.remove('open');}
 
-// ── COPY TO CLIPBOARD ──
 function copySheet(type){
   const text=type==='full'?window._sheetData.full:window._sheetData.row;
-  navigator.clipboard.writeText(text).then(()=>{
-    toast('✅ Copied! Google Sheet mein jaake Ctrl+V karo','ok');
-  }).catch(()=>{
+  navigator.clipboard.writeText(text).then(()=>toast('✅ Copied! Sheet mein Ctrl+V karo','ok')).catch(()=>{
     const ta=document.createElement('textarea');
     ta.value=text; ta.style.cssText='position:fixed;opacity:0;top:0;left:0';
     document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-    toast('✅ Copied! Google Sheet mein Ctrl+V karo','ok');
+    toast('✅ Copied! Sheet mein Ctrl+V karo','ok');
   });
 }
 
-// ── SHEETS SYNC ──
 async function syncToSheets(action,payload){
-  if(!SCRIPT_URL) return false;
-  try{
-    const r=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({action,payload})});
-    return (await r.json()).ok;
-  }catch{
-    try{
-      const r=await fetch(SCRIPT_URL+'?data='+encodeURIComponent(JSON.stringify({action,payload})));
-      return (await r.json()).ok;
-    }catch{ return false; }
-  }
+  if(!SCRIPT_URL)return false;
+  try{const r=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({action,payload})});return(await r.json()).ok;}
+  catch{try{const r=await fetch(SCRIPT_URL+'?data='+encodeURIComponent(JSON.stringify({action,payload})));return(await r.json()).ok;}catch{return false;}}
 }
 
-// ── INIT ──
-renderLeads();
+renderTable();
 updateStats();
 </script>
 </body>
