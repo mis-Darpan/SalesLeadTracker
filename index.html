@@ -7,71 +7,39 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --ink: #0a0f1e;
-  --ink2: #1e2a45;
-  --ink3: #3d4f6e;
-  --muted: #7a8aaa;
-  --muted2: #b0bdd4;
-  --bg: #f4f6fb;
-  --bg2: #eaecf5;
-  --white: #ffffff;
-  --border: #dde3f0;
-  --border2: #c8d0e8;
-
-  --blue: #1a4fd6;
-  --blue-l: #eef3ff;
-  --blue-m: #c2d2f8;
-
-  --green: #0d9e6e;
-  --green-l: #edfaf5;
-  --green-m: #a7edd8;
-
-  --amber: #c97a00;
-  --amber-l: #fff8eb;
-  --amber-m: #fde5a3;
-
-  --red: #d43b3b;
-  --red-l: #fff0f0;
-  --red-m: #f8c4c4;
-
-  --purple: #6d3be8;
-  --purple-l: #f3effe;
-  --purple-m: #d3bef8;
-
-  --sky: #0891c2;
-  --sky-l: #ecf9ff;
-
+  --ink: #0a0f1e; --ink2: #1e2a45; --ink3: #3d4f6e;
+  --muted: #7a8aaa; --muted2: #b0bdd4;
+  --bg: #f4f6fb; --bg2: #eaecf5; --white: #ffffff;
+  --border: #dde3f0; --border2: #c8d0e8;
+  --blue: #1a4fd6; --blue-l: #eef3ff; --blue-m: #c2d2f8;
+  --green: #0d9e6e; --green-l: #edfaf5; --green-m: #a7edd8;
+  --amber: #c97a00; --amber-l: #fff8eb; --amber-m: #fde5a3;
+  --red: #d43b3b; --red-l: #fff0f0; --red-m: #f8c4c4;
+  --purple: #6d3be8; --purple-l: #f3effe; --purple-m: #d3bef8;
+  --sky: #0891c2; --sky-l: #ecf9ff;
   --sh: 0 1px 4px rgba(10,15,30,.07), 0 2px 8px rgba(10,15,30,.04);
   --sh2: 0 4px 20px rgba(10,15,30,.10);
   --sh3: 0 12px 40px rgba(10,15,30,.14);
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
 
 /* ── TOPBAR ── */
 .topbar {
-  background: var(--ink);
-  padding: .85rem 2rem;
+  background: var(--ink); padding: .85rem 2rem;
   display: flex; align-items: center; justify-content: space-between;
   position: sticky; top: 0; z-index: 100;
   box-shadow: 0 2px 12px rgba(10,15,30,.25);
 }
-.tb-logo { display: flex; align-items: center; gap: .7rem; }
 .tb-badge {
   background: var(--blue); color: #fff;
   font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
   padding: 4px 10px; border-radius: 5px; letter-spacing: .5px;
 }
+.tb-logo { display: flex; align-items: center; gap: .7rem; }
 .tb-name { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: #fff; }
 .tb-sub { font-size: .7rem; color: rgba(255,255,255,.4); margin-top: 1px; }
-.tb-right { display: flex; align-items: center; gap: .8rem; }
-.tb-stat {
-  text-align: right;
-  font-size: .68rem; color: rgba(255,255,255,.45);
-  font-family: 'JetBrains Mono', monospace;
-  line-height: 1.6;
-}
+.tb-stat { text-align: right; font-size: .68rem; color: rgba(255,255,255,.45); font-family: 'JetBrains Mono', monospace; line-height: 1.6; }
 .tb-stat b { color: rgba(255,255,255,.85); font-size: .82rem; }
 
 /* ── LAYOUT ── */
@@ -80,8 +48,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
 /* ── SIDEBAR FORM ── */
 .form-panel {
   background: var(--white); border-right: 1px solid var(--border);
-  overflow-y: auto; height: calc(100vh - 52px);
-  position: sticky; top: 52px;
+  overflow-y: auto; height: calc(100vh - 52px); position: sticky; top: 52px;
 }
 .fp-header {
   padding: 1.2rem 1.4rem;
@@ -95,8 +62,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
 .fp-sec-title {
   font-size: .6rem; font-weight: 700; color: var(--muted);
   text-transform: uppercase; letter-spacing: 1px;
-  margin-bottom: .6rem; padding-bottom: .3rem;
-  border-bottom: 1px solid var(--border);
+  margin-bottom: .6rem; padding-bottom: .3rem; border-bottom: 1px solid var(--border);
 }
 .fld { display: flex; flex-direction: column; gap: .25rem; margin-bottom: .6rem; }
 .fld label { font-size: .68rem; font-weight: 600; color: var(--ink3); }
@@ -116,6 +82,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
 }
 .fld textarea { resize: none; height: 60px; font-size: .82rem; }
 .frow { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; }
+
+/* Stage Pills */
 .stage-pills { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .3rem; }
 .stage-pill {
   padding: .38rem .75rem; border-radius: 20px; font-size: .72rem; font-weight: 600;
@@ -124,11 +92,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
 }
 .stage-pill:hover { border-color: var(--blue-m); color: var(--blue); background: var(--blue-l); }
 .stage-pill.sel { color: #fff; border-color: transparent; }
-.stage-pill[data-stage="New Lead"].sel { background: var(--sky); }
-.stage-pill[data-stage="Quotation Sent"].sel { background: var(--purple); }
-.stage-pill[data-stage="Follow-up"].sel { background: var(--amber); color: #fff; }
+.stage-pill[data-stage="New Lead"].sel        { background: var(--sky); }
+.stage-pill[data-stage="Quotation Sent"].sel  { background: var(--purple); }
+.stage-pill[data-stage="Follow-up"].sel       { background: var(--amber); }
 .stage-pill[data-stage="Order Confirmed"].sel { background: var(--green); }
-.stage-pill[data-stage="Lost"].sel { background: var(--red); }
+.stage-pill[data-stage="Lost"].sel            { background: var(--red); }
+
 .btn-add {
   width: 100%; background: var(--blue); color: #fff; border: none; border-radius: 9px;
   padding: .82rem; font-family: 'Syne', sans-serif; font-size: .9rem; font-weight: 700;
@@ -143,36 +112,27 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
 /* ── MAIN PANEL ── */
 .main-panel { padding: 1.4rem; overflow-y: auto; }
 
-/* ── TOP STATS ── */
-.stats-grid {
-  display: grid; grid-template-columns: repeat(5, 1fr); gap: .7rem; margin-bottom: 1.2rem;
-}
+/* Stats */
+.stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: .7rem; margin-bottom: 1.2rem; }
 .stat-card {
   background: var(--white); border: 1px solid var(--border); border-radius: 12px;
   padding: .9rem 1rem; box-shadow: var(--sh); position: relative; overflow: hidden;
 }
-.stat-card::after {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-}
-.sc-blue::after { background: var(--blue); }
-.sc-sky::after { background: var(--sky); }
+.stat-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.sc-blue::after   { background: var(--blue); }
+.sc-sky::after    { background: var(--sky); }
 .sc-purple::after { background: var(--purple); }
-.sc-amber::after { background: var(--amber); }
-.sc-green::after { background: var(--green); }
-.sc-red::after { background: var(--red); }
-.stat-val {
-  font-family: 'JetBrains Mono', monospace; font-size: 1.7rem;
-  font-weight: 600; color: var(--ink); line-height: 1;
-}
-.stat-label {
-  font-size: .62rem; font-weight: 700; color: var(--muted);
-  text-transform: uppercase; letter-spacing: .6px; margin-top: .3rem;
-}
+.sc-amber::after  { background: var(--amber); }
+.sc-green::after  { background: var(--green); }
+.stat-val { font-family: 'JetBrains Mono', monospace; font-size: 1.7rem; font-weight: 600; color: var(--ink); line-height: 1; }
+.stat-label { font-size: .62rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-top: .3rem; }
 
-/* ── FILTERS ── */
-.filters {
-  display: flex; align-items: center; gap: .6rem; margin-bottom: 1rem; flex-wrap: wrap;
-}
+/* Pipeline Bar */
+.pipeline-bar { display: flex; height: 8px; border-radius: 5px; overflow: hidden; margin-bottom: 1.2rem; gap: 2px; }
+.pb-seg { flex: 1; border-radius: 3px; transition: flex .4s ease; }
+
+/* Filters */
+.filters { display: flex; align-items: center; gap: .6rem; margin-bottom: 1rem; flex-wrap: wrap; }
 .filter-btn {
   padding: .4rem .9rem; border-radius: 20px; font-size: .75rem; font-weight: 600;
   border: 1.5px solid var(--border); cursor: pointer; transition: all .15s;
@@ -180,12 +140,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
 }
 .filter-btn:hover { border-color: var(--blue-m); color: var(--blue); }
 .filter-btn.active { color: #fff; border-color: transparent; }
-.fb-all.active { background: var(--ink); }
-.fb-new.active { background: var(--sky); }
-.fb-quot.active { background: var(--purple); }
+.fb-all.active    { background: var(--ink); }
+.fb-new.active    { background: var(--sky); }
+.fb-quot.active   { background: var(--purple); }
 .fb-follow.active { background: var(--amber); }
-.fb-won.active { background: var(--green); }
-.fb-lost.active { background: var(--red); }
+.fb-won.active    { background: var(--green); }
+.fb-lost.active   { background: var(--red); }
 .filter-search {
   margin-left: auto; background: var(--white); border: 1.5px solid var(--border);
   border-radius: 8px; padding: .4rem .8rem; font-family: 'DM Sans', sans-serif;
@@ -198,24 +158,54 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
 .lead-card {
   background: var(--white); border: 1px solid var(--border); border-radius: 12px;
   padding: 0; box-shadow: var(--sh); overflow: hidden; transition: all .2s;
-  cursor: pointer;
 }
 .lead-card:hover { box-shadow: var(--sh2); transform: translateY(-1px); border-color: var(--border2); }
 .lc-top { display: flex; align-items: stretch; }
 .lc-stage-bar { width: 5px; flex-shrink: 0; }
-.lc-bar-new { background: var(--sky); }
-.lc-bar-quot { background: var(--purple); }
+.lc-bar-new    { background: var(--sky); }
+.lc-bar-quot   { background: var(--purple); }
 .lc-bar-follow { background: var(--amber); }
-.lc-bar-won { background: var(--green); }
-.lc-bar-lost { background: var(--red); }
+.lc-bar-won    { background: var(--green); }
+.lc-bar-lost   { background: var(--red); }
 .lc-body { flex: 1; padding: .85rem 1rem; }
 .lc-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: .5rem; gap: .5rem; }
 .lc-name { font-family: 'Syne', sans-serif; font-size: .95rem; font-weight: 700; color: var(--ink); }
 .lc-company { font-size: .72rem; color: var(--muted); margin-top: .1rem; }
 .lc-stage-badge {
-  font-size: .62rem; font-weight: 700; padding: .22rem .65rem; border-radius: 20px;
-  white-space: nowrap; flex-shrink: 0;
+  font-size: .62rem; font-weight: 700; padding: .22rem .65rem; border-radius: 20px; white-space: nowrap; flex-shrink: 0;
 }
+
+/* ── PIPELINE JOURNEY (NEW) ── */
+.pipeline-journey {
+  display: flex; align-items: center; margin: .65rem 0 .6rem; position: relative;
+}
+.pj-step {
+  display: flex; flex-direction: column; align-items: center;
+  flex: 1; cursor: pointer; position: relative;
+}
+.pj-step:not(:last-child)::after {
+  content: ''; position: absolute;
+  top: 11px; left: 50%; right: -50%;
+  height: 2px; background: var(--border2); z-index: 0; transition: background .3s;
+}
+.pj-step.done:not(:last-child)::after { background: var(--green); }
+.pj-dot {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid var(--border2);
+  background: var(--bg); z-index: 1; position: relative;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700; transition: all .25s;
+  color: var(--muted2);
+}
+.pj-dot.done   { background: var(--green); border-color: var(--green); color: #fff; }
+.pj-dot.active { border-width: 3px; }
+.pj-dot.lost-d { background: var(--red); border-color: var(--red); color: #fff; }
+.pj-lbl {
+  font-size: 8.5px; color: var(--muted); margin-top: 4px; text-align: center;
+  line-height: 1.2; max-width: 54px;
+}
+.pj-lbl.active-lbl { color: var(--ink); font-weight: 700; }
+
 .lc-meta { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .5rem; }
 .lc-chip {
   font-size: .65rem; color: var(--ink3); background: var(--bg);
@@ -223,12 +213,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
   padding: .18rem .5rem; font-family: 'JetBrains Mono', monospace;
 }
 .lc-footer { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
-.lc-follow-date {
-  font-size: .68rem; font-weight: 600;
-  display: flex; align-items: center; gap: .3rem;
-}
-.lc-follow-ok { color: var(--green); }
-.lc-follow-due { color: var(--amber); }
+.lc-follow-date { font-size: .68rem; font-weight: 600; display: flex; align-items: center; gap: .3rem; }
+.lc-follow-ok   { color: var(--green); }
+.lc-follow-due  { color: var(--amber); }
 .lc-follow-over { color: var(--red); }
 .lc-actions { display: flex; gap: .3rem; }
 .lc-btn {
@@ -237,19 +224,26 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
   color: var(--ink3); font-family: 'DM Sans', sans-serif; transition: all .15s;
 }
 .lc-btn:hover { background: var(--blue-l); border-color: var(--blue-m); color: var(--blue); }
-.lc-btn.won { background: var(--green-l); border-color: var(--green-m); color: var(--green); }
-.lc-btn.lost { background: var(--red-l); border-color: var(--red-m); color: var(--red); }
+.lc-btn.next  { background: var(--blue-l); border-color: var(--blue-m); color: var(--blue); font-weight: 700; }
+.lc-btn.won   { background: var(--green-l); border-color: var(--green-m); color: var(--green); }
+.lc-btn.lost  { background: var(--red-l);   border-color: var(--red-m);   color: var(--red); }
 .lc-notes { font-size: .72rem; color: var(--muted); margin-top: .4rem; padding-top: .4rem; border-top: 1px dashed var(--border); font-style: italic; }
 
-/* ── PROGRESS BAR ── */
-.pipeline-bar { display: flex; height: 8px; border-radius: 5px; overflow: hidden; margin-bottom: 1.2rem; gap: 2px; }
-.pb-seg { flex: 1; border-radius: 3px; transition: flex .4s ease; }
+/* History inline */
+.lc-history {
+  margin-top: .5rem; padding-top: .5rem; border-top: 1px dashed var(--border);
+}
+.lc-hist-title { font-size: .58rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-bottom: .3rem; }
+.lc-hist-row { display: flex; gap: .5rem; font-size: .68rem; padding: 2px 0; }
+.lc-hist-date { color: var(--muted); white-space: nowrap; }
+.lc-hist-stage { font-weight: 600; color: var(--ink3); }
+.lc-hist-note { color: var(--muted); }
 
-/* ── MODAL ── */
+/* Modal */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,15,30,.55); z-index: 200; align-items: center; justify-content: center; padding: 1.5rem; backdrop-filter: blur(4px); }
 .modal-overlay.open { display: flex; }
 .modal { background: var(--white); border-radius: 16px; width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto; box-shadow: var(--sh3); animation: modalIn .22s ease; }
-@keyframes modalIn { from { opacity: 0; transform: scale(.96) translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes modalIn { from { opacity:0; transform:scale(.96) translateY(10px); } to { opacity:1; transform:none; } }
 .modal-head {
   padding: 1.2rem 1.4rem; border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
@@ -270,22 +264,22 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
   background: var(--bg); color: var(--muted); font-family: 'DM Sans', sans-serif;
 }
 .su-btn:hover { transform: scale(1.03); }
-.su-btn[data-s="New Lead"] { border-color: var(--sky); color: var(--sky); }
-.su-btn[data-s="Quotation Sent"] { border-color: var(--purple); color: var(--purple); }
-.su-btn[data-s="Follow-up"] { border-color: var(--amber); color: var(--amber); }
-.su-btn[data-s="Order Confirmed"] { border-color: var(--green); color: var(--green); }
-.su-btn[data-s="Lost"] { border-color: var(--red); color: var(--red); }
+.su-btn[data-s="New Lead"]        { border-color: var(--sky);    color: var(--sky); }
+.su-btn[data-s="Quotation Sent"]  { border-color: var(--purple); color: var(--purple); }
+.su-btn[data-s="Follow-up"]       { border-color: var(--amber);  color: var(--amber); }
+.su-btn[data-s="Order Confirmed"] { border-color: var(--green);  color: var(--green); }
+.su-btn[data-s="Lost"]            { border-color: var(--red);    color: var(--red); }
 .su-btn.current { color: #fff; border-color: transparent; }
-.su-btn[data-s="New Lead"].current { background: var(--sky); }
-.su-btn[data-s="Quotation Sent"].current { background: var(--purple); }
-.su-btn[data-s="Follow-up"].current { background: var(--amber); }
+.su-btn[data-s="New Lead"].current        { background: var(--sky); }
+.su-btn[data-s="Quotation Sent"].current  { background: var(--purple); }
+.su-btn[data-s="Follow-up"].current       { background: var(--amber); }
 .su-btn[data-s="Order Confirmed"].current { background: var(--green); }
-.su-btn[data-s="Lost"].current { background: var(--red); }
+.su-btn[data-s="Lost"].current            { background: var(--red); }
 
-/* TOAST */
+/* Toast */
 .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--ink); color: #fff; padding: .75rem 1.2rem; border-radius: 10px; font-size: .82rem; font-weight: 600; z-index: 300; opacity: 0; transform: translateY(12px); transition: all .28s; box-shadow: var(--sh3); }
 .toast.show { opacity: 1; transform: translateY(0); }
-.toast.ok { background: var(--green); }
+.toast.ok  { background: var(--green); }
 .toast.err { background: var(--red); }
 
 .empty-state { text-align: center; padding: 4rem 2rem; color: var(--muted); }
@@ -301,22 +295,19 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
     <div class="tb-badge">LITPAX</div>
     <div>
       <div class="tb-name">Sales Lead Tracker</div>
-      <div class="tb-sub">Pipeline Management System</div>
+      <div class="tb-sub">Dynamic Pipeline Management</div>
     </div>
   </div>
-  <div class="tb-right">
-    <div class="tb-stat" id="tb-stat">Loading...</div>
-  </div>
+  <div class="tb-stat" id="tb-stat">Loading...</div>
 </div>
 
-<!-- LAYOUT -->
 <div class="layout">
 
   <!-- LEFT: ADD LEAD FORM -->
   <div class="form-panel">
     <div class="fp-header">
       <div class="fp-title">+ Add New Lead</div>
-      <div class="fp-sub">Naya prospect add karo pipeline mein</div>
+      <div class="fp-sub">Naya prospect pipeline mein add karo</div>
     </div>
     <div class="fp-body">
 
@@ -352,8 +343,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
             <select id="f-voltage">
               <option value="">-- V --</option>
               <option>12V</option><option>24V</option><option>36V</option>
-              <option>48V</option><option>60V</option><option>72V</option>
-              <option>96V</option><option>Custom</option>
+              <option>48V</option><option>60V</option><option>72V</option><option>96V</option><option>Custom</option>
             </select>
           </div>
           <div class="fld"><label>Capacity (Ah)</label>
@@ -361,13 +351,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
               <option value="">-- Ah --</option>
               <option>20Ah</option><option>30Ah</option><option>40Ah</option>
               <option>50Ah</option><option>60Ah</option><option>75Ah</option>
-              <option>100Ah</option><option>150Ah</option><option>200Ah</option>
-              <option>Custom</option>
+              <option>100Ah</option><option>150Ah</option><option>200Ah</option><option>Custom</option>
             </select>
           </div>
         </div>
         <div class="frow">
-          <div class="fld"><label>No. of Batteries</label><input type="number" id="f-fleet" placeholder="Qty required" min="1"></div>
+          <div class="fld"><label>No. of Batteries</label><input type="number" id="f-fleet" placeholder="Qty" min="1"></div>
           <div class="fld"><label>Budget Range (₹)</label>
             <select id="f-amount">
               <option value="">-- Select --</option>
@@ -404,11 +393,11 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
         <div class="fld">
           <label>Stage <span class="req">*</span></label>
           <div class="stage-pills">
-            <div class="stage-pill sel" data-stage="New Lead" onclick="selStage(this)">🆕 New Lead</div>
-            <div class="stage-pill" data-stage="Quotation Sent" onclick="selStage(this)">📄 Quotation Sent</div>
-            <div class="stage-pill" data-stage="Follow-up" onclick="selStage(this)">📞 Follow-up</div>
-            <div class="stage-pill" data-stage="Order Confirmed" onclick="selStage(this)">✅ Order Confirmed</div>
-            <div class="stage-pill" data-stage="Lost" onclick="selStage(this)">❌ Lost</div>
+            <div class="stage-pill sel" data-stage="New Lead"        onclick="selStage(this)">🆕 New Lead</div>
+            <div class="stage-pill"     data-stage="Quotation Sent"  onclick="selStage(this)">📄 Quotation Sent</div>
+            <div class="stage-pill"     data-stage="Follow-up"       onclick="selStage(this)">📞 Follow-up</div>
+            <div class="stage-pill"     data-stage="Order Confirmed" onclick="selStage(this)">✅ Order Confirmed</div>
+            <div class="stage-pill"     data-stage="Lost"            onclick="selStage(this)">❌ Lost</div>
           </div>
           <input type="hidden" id="f-stage" value="New Lead">
         </div>
@@ -417,13 +406,13 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
         <div class="fld"><label>Assigned To</label>
           <select id="f-assigned">
             <option value="">-- Select --</option>
-            <option>Sukhpal</option><option>Other</option>
+            <option>Sukhpal</option><option>Darpan</option><option>Other</option>
           </select>
         </div>
       </div>
 
       <button class="btn-add" id="add-btn" onclick="addLead()">
-        <span>⚡</span> Add to Pipeline
+        ⚡ Add to Pipeline
       </button>
     </div>
   </div>
@@ -431,30 +420,26 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
   <!-- RIGHT: PIPELINE VIEW -->
   <div class="main-panel">
 
-    <!-- Stats -->
-    <div class="stats-grid" id="stats-grid">
-      <div class="stat-card sc-blue"><div class="stat-val" id="s-total">0</div><div class="stat-label">Total Leads</div></div>
-      <div class="stat-card sc-sky"><div class="stat-val" id="s-new">0</div><div class="stat-label">New Leads</div></div>
-      <div class="stat-card sc-purple"><div class="stat-val" id="s-quot">0</div><div class="stat-label">Quotation Sent</div></div>
-      <div class="stat-card sc-amber"><div class="stat-val" id="s-follow">0</div><div class="stat-label">Follow-up</div></div>
-      <div class="stat-card sc-green"><div class="stat-val" id="s-won">0</div><div class="stat-label">Won</div></div>
+    <div class="stats-grid">
+      <div class="stat-card sc-blue">  <div class="stat-val" id="s-total">0</div>  <div class="stat-label">Total Leads</div></div>
+      <div class="stat-card sc-sky">   <div class="stat-val" id="s-new">0</div>    <div class="stat-label">New Leads</div></div>
+      <div class="stat-card sc-purple"><div class="stat-val" id="s-quot">0</div>   <div class="stat-label">Quotation Sent</div></div>
+      <div class="stat-card sc-amber"> <div class="stat-val" id="s-follow">0</div> <div class="stat-label">Follow-up</div></div>
+      <div class="stat-card sc-green"> <div class="stat-val" id="s-won">0</div>    <div class="stat-label">Won</div></div>
     </div>
 
-    <!-- Pipeline Bar -->
     <div class="pipeline-bar" id="pipeline-bar"></div>
 
-    <!-- Filters -->
     <div class="filters">
-      <button class="filter-btn fb-all active" onclick="setFilter('All',this)">All</button>
-      <button class="filter-btn fb-new" onclick="setFilter('New Lead',this)">🆕 New</button>
-      <button class="filter-btn fb-quot" onclick="setFilter('Quotation Sent',this)">📄 Quotation</button>
-      <button class="filter-btn fb-follow" onclick="setFilter('Follow-up',this)">📞 Follow-up</button>
-      <button class="filter-btn fb-won" onclick="setFilter('Order Confirmed',this)">✅ Won</button>
-      <button class="filter-btn fb-lost" onclick="setFilter('Lost',this)">❌ Lost</button>
+      <button class="filter-btn fb-all    active" onclick="setFilter('All',this)">All</button>
+      <button class="filter-btn fb-new"          onclick="setFilter('New Lead',this)">🆕 New</button>
+      <button class="filter-btn fb-quot"         onclick="setFilter('Quotation Sent',this)">📄 Quotation</button>
+      <button class="filter-btn fb-follow"       onclick="setFilter('Follow-up',this)">📞 Follow-up</button>
+      <button class="filter-btn fb-won"          onclick="setFilter('Order Confirmed',this)">✅ Won</button>
+      <button class="filter-btn fb-lost"         onclick="setFilter('Lost',this)">❌ Lost</button>
       <input class="filter-search" type="text" placeholder="Search name / company..." oninput="renderLeads()" id="search-inp">
     </div>
 
-    <!-- Leads -->
     <div class="leads-grid" id="leads-grid"></div>
   </div>
 </div>
@@ -466,7 +451,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
       <div class="modal-title" id="modal-title">Lead Details</div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-body"   id="modal-body"></div>
     <div class="modal-footer" id="modal-footer"></div>
   </div>
 </div>
@@ -477,6 +462,20 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--i
 // ── CONFIG ──
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyV0Y8xU1KjqOjjCbhm93u8m-zau60rOYEiHARB8oq1GBeUT9kaoLlEWUwCkX-Oqo16/exec';
 
+// ── STAGE CONFIG ──
+const STAGES      = ['New Lead','Quotation Sent','Follow-up','Order Confirmed'];
+const NEXT_STAGE  = { 'New Lead':'Quotation Sent', 'Quotation Sent':'Follow-up', 'Follow-up':'Order Confirmed' };
+const STAGE_EMOJI = { 'New Lead':'🆕','Quotation Sent':'📄','Follow-up':'📞','Order Confirmed':'✅','Lost':'❌' };
+const STAGE_SHORT = { 'New Lead':'New Lead','Quotation Sent':'Quotation','Follow-up':'Follow-up','Order Confirmed':'Won','Lost':'Lost' };
+
+const STAGE_COLORS = {
+  'New Lead':        { bar:'lc-bar-new',   badge:'background:#e0f5fd;color:#0891c2', dot:'#0891c2' },
+  'Quotation Sent':  { bar:'lc-bar-quot',  badge:'background:#f3effe;color:#6d3be8', dot:'#6d3be8' },
+  'Follow-up':       { bar:'lc-bar-follow',badge:'background:#fff8eb;color:#c97a00', dot:'#c97a00' },
+  'Order Confirmed': { bar:'lc-bar-won',   badge:'background:#edfaf5;color:#0d9e6e', dot:'#0d9e6e' },
+  'Lost':            { bar:'lc-bar-lost',  badge:'background:#fff0f0;color:#d43b3b', dot:'#d43b3b' },
+};
+
 // ── STORAGE ──
 function getLeads(){ return JSON.parse(localStorage.getItem('litpax_leads')||'[]'); }
 function saveLeads(l){ localStorage.setItem('litpax_leads', JSON.stringify(l)); }
@@ -485,26 +484,18 @@ function saveLeads(l){ localStorage.setItem('litpax_leads', JSON.stringify(l)); 
 let FILTER = 'All';
 let SELECTED_LEAD = null;
 
-// ── HELPERS ──
 function td(){ return new Date().toISOString().slice(0,10); }
+
 function toast(msg, type=''){
   const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast show' + (type?' '+type:'');
+  t.textContent = msg;
+  t.className = 'toast show' + (type?' '+type:'');
   setTimeout(()=>t.classList.remove('show'), 2600);
 }
 
-const STAGE_COLORS = {
-  'New Lead':         { bar:'lc-bar-new',   badge:'background:#e0f5fd;color:#0891c2', },
-  'Quotation Sent':   { bar:'lc-bar-quot',  badge:'background:#f3effe;color:#6d3be8', },
-  'Follow-up':        { bar:'lc-bar-follow',badge:'background:#fff8eb;color:#c97a00', },
-  'Order Confirmed':  { bar:'lc-bar-won',   badge:'background:#edfaf5;color:#0d9e6e', },
-  'Lost':             { bar:'lc-bar-lost',  badge:'background:#fff0f0;color:#d43b3b', },
-};
-const STAGE_EMOJIS = {'New Lead':'🆕','Quotation Sent':'📄','Follow-up':'📞','Order Confirmed':'✅','Lost':'❌'};
-
-// ── STAGE SELECT ──
+// ── STAGE SELECT (form) ──
 function selStage(el){
-  document.querySelectorAll('#form-panel .stage-pill, .form-panel .stage-pill').forEach(p=>p.classList.remove('sel'));
+  document.querySelectorAll('.form-panel .stage-pill').forEach(p=>p.classList.remove('sel'));
   el.classList.add('sel');
   document.getElementById('f-stage').value = el.dataset.stage;
 }
@@ -515,14 +506,13 @@ function addLead(){
   const phone = document.getElementById('f-phone').value.trim();
   const oem   = document.getElementById('f-oem').value;
   const stage = document.getElementById('f-stage').value;
-  if(!name||!phone||!oem||!stage){ toast('Name, Phone aur Application Type required hai','err'); return; }
+  if(!name||!phone||!oem||!stage){ toast('Name, Phone aur Application required hai','err'); return; }
 
   const btn = document.getElementById('add-btn');
-  btn.disabled = true; btn.innerHTML = '<span>⏳</span> Adding...';
+  btn.disabled = true; btn.textContent = '⏳ Adding...';
 
   const lead = {
-    id:       'LD' + Date.now(),
-    date:     td(),
+    id: 'LD'+Date.now(), date: td(),
     name, phone,
     email:    document.getElementById('f-email').value.trim(),
     company:  document.getElementById('f-company').value.trim(),
@@ -546,23 +536,19 @@ function addLead(){
   const leads = getLeads();
   leads.unshift(lead);
   saveLeads(leads);
-  renderLeads();
-  updateStats();
+  renderLeads(); updateStats();
 
-  // Sync to Google Sheets
   if(SCRIPT_URL){
-    syncToSheets('addLead', lead)
-      .then(ok => {
-        lead.synced = ok;
-        saveLeads(getLeads().map(l => l.id===lead.id ? {...l, synced:ok} : l));
-        toast(ok ? '✅ Lead added & synced!' : '💾 Lead saved locally', ok?'ok':'');
-      });
+    syncToSheets('addLead', lead).then(ok=>{
+      saveLeads(getLeads().map(l=>l.id===lead.id?{...l,synced:ok}:l));
+      toast(ok?'✅ Lead added & synced!':'💾 Lead saved locally', ok?'ok':'');
+    });
   } else {
-    toast('✅ Lead added — ' + name, 'ok');
+    toast('✅ Lead added — '+name,'ok');
   }
 
   resetForm();
-  btn.disabled = false; btn.innerHTML = '<span>⚡</span> Add to Pipeline';
+  btn.disabled=false; btn.textContent='⚡ Add to Pipeline';
 }
 
 function resetForm(){
@@ -574,44 +560,104 @@ function resetForm(){
   });
   document.querySelectorAll('.stage-pill').forEach(p=>p.classList.remove('sel'));
   document.querySelector('.stage-pill[data-stage="New Lead"]').classList.add('sel');
-  document.getElementById('f-stage').value = 'New Lead';
+  document.getElementById('f-stage').value='New Lead';
+}
+
+// ── PIPELINE JOURNEY HTML ──
+function buildJourney(lead){
+  const isLost = lead.stage==='Lost';
+  const curIdx = STAGES.indexOf(lead.stage);
+
+  let html = '<div class="pipeline-journey">';
+  STAGES.forEach((s, i)=>{
+    const isDone   = !isLost && i < curIdx;
+    const isActive = !isLost && i === curIdx;
+    const sc = STAGE_COLORS[s];
+
+    let dotClass = '';
+    let dotStyle = '';
+    let dotLabel = '';
+    if(isDone){   dotClass='done';   dotLabel='✓'; }
+    if(isActive){ dotClass='active'; dotLabel='●'; dotStyle=`border-color:${sc.dot};background:${sc.dot};color:#fff;`; }
+
+    const lblClass = isActive ? 'pj-lbl active-lbl' : 'pj-lbl';
+    const stepDone = isDone ? ' done' : '';
+
+    html += `
+      <div class="pj-step${stepDone}" onclick="quickStage('${lead.id}','${s}')" title="Move to: ${s}">
+        <div class="pj-dot ${dotClass}" style="${dotStyle}">${dotLabel}</div>
+        <div class="${lblClass}">${STAGE_SHORT[s]}</div>
+      </div>`;
+  });
+
+  if(isLost){
+    html += `<div class="pj-step" style="flex:0;margin-left:8px">
+      <div class="pj-dot lost-d">✕</div>
+      <div class="pj-lbl" style="color:var(--red)">Lost</div>
+    </div>`;
+  }
+
+  html += '</div>';
+  return html;
 }
 
 // ── FILTER ──
-function setFilter(f, el){
-  FILTER = f;
+function setFilter(f,el){
+  FILTER=f;
   document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
   renderLeads();
 }
 
-// ── RENDER ──
+// ── RENDER LEADS ──
 function renderLeads(){
   const leads = getLeads();
   const q = (document.getElementById('search-inp')?.value||'').toLowerCase();
-  let filtered = leads.filter(l => {
-    const matchFilter = FILTER==='All' || l.stage===FILTER;
-    const matchSearch = !q || l.name.toLowerCase().includes(q) || (l.company||'').toLowerCase().includes(q) || (l.phone||'').includes(q);
-    return matchFilter && matchSearch;
+  const filtered = leads.filter(l=>{
+    const mf = FILTER==='All'||l.stage===FILTER;
+    const ms = !q||l.name.toLowerCase().includes(q)||(l.company||'').toLowerCase().includes(q)||(l.phone||'').includes(q);
+    return mf&&ms;
   });
 
   const grid = document.getElementById('leads-grid');
   if(!filtered.length){
-    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🎯</div><div class="empty-title">Koi lead nahi</div><div style="font-size:.75rem;color:var(--muted);margin-top:.2rem">Filter change karo ya naya lead add karo</div></div>`;
+    grid.innerHTML=`<div class="empty-state"><div class="empty-icon">🎯</div><div class="empty-title">Koi lead nahi</div><div style="font-size:.75rem;color:var(--muted);margin-top:.2rem">Filter change karo ya naya lead add karo</div></div>`;
     return;
   }
 
-  grid.innerHTML = filtered.map(l => {
-    const sc = STAGE_COLORS[l.stage] || STAGE_COLORS['New Lead'];
-    const today = td();
-    let followHtml = '';
+  const today = td();
+  grid.innerHTML = filtered.map(l=>{
+    const sc = STAGE_COLORS[l.stage]||STAGE_COLORS['New Lead'];
+
+    // Follow-up tag
+    let followHtml='';
     if(l.followup){
       const diff = Math.round((new Date(l.followup)-new Date(today))/(1000*60*60*24));
-      if(diff < 0) followHtml = `<span class="lc-follow-date lc-follow-over">⚠️ Overdue by ${Math.abs(diff)} days</span>`;
-      else if(diff === 0) followHtml = `<span class="lc-follow-date lc-follow-due">📞 Follow-up Today!</span>`;
-      else if(diff <= 2) followHtml = `<span class="lc-follow-date lc-follow-due">📞 ${diff} days left</span>`;
-      else followHtml = `<span class="lc-follow-date lc-follow-ok">📅 ${l.followup}</span>`;
+      if(diff<0)      followHtml=`<span class="lc-follow-date lc-follow-over">⚠️ Overdue ${Math.abs(diff)}d</span>`;
+      else if(diff===0) followHtml=`<span class="lc-follow-date lc-follow-due">📞 Aaj follow-up!</span>`;
+      else if(diff<=2)  followHtml=`<span class="lc-follow-date lc-follow-due">📞 ${diff}d baad</span>`;
+      else              followHtml=`<span class="lc-follow-date lc-follow-ok">📅 ${l.followup}</span>`;
     }
+
+    // Next stage button
+    const ns = NEXT_STAGE[l.stage];
+    const nextBtn = ns
+      ? `<button class="lc-btn next" onclick="event.stopPropagation();quickStage('${l.id}','${ns}')">→ ${STAGE_SHORT[ns]}</button>`
+      : '';
+
+    // History (last 3)
+    const hist = (l.history||[]).slice(-3).reverse();
+    const histHtml = hist.length>1 ? `
+      <div class="lc-history">
+        <div class="lc-hist-title">History</div>
+        ${hist.map(h=>`
+          <div class="lc-hist-row">
+            <span class="lc-hist-date">${h.date}</span>
+            <span class="lc-hist-stage">${h.stage}</span>
+            ${h.note?`<span class="lc-hist-note">— ${h.note}</span>`:''}
+          </div>`).join('')}
+      </div>` : '';
+
     return `
     <div class="lead-card" onclick="openModal('${l.id}')">
       <div class="lc-top">
@@ -622,8 +668,11 @@ function renderLeads(){
               <div class="lc-name">${l.name}</div>
               <div class="lc-company">${l.company||'Individual'} · ${l.city||''}</div>
             </div>
-            <span class="lc-stage-badge" style="${sc.badge}">${STAGE_EMOJIS[l.stage]||''} ${l.stage}</span>
+            <span class="lc-stage-badge" style="${sc.badge}">${STAGE_EMOJI[l.stage]||''} ${l.stage}</span>
           </div>
+
+          ${buildJourney(l)}
+
           <div class="lc-meta">
             <span class="lc-chip">📱 ${l.phone}</span>
             <span class="lc-chip">🏷️ ${l.oem}</span>
@@ -632,74 +681,77 @@ function renderLeads(){
             ${l.amount?`<span class="lc-chip">💰 ${l.amount}</span>`:''}
             ${l.assigned?`<span class="lc-chip">👤 ${l.assigned}</span>`:''}
           </div>
-          <div class="lc-footer">
+
+          <div class="lc-footer" onclick="event.stopPropagation()">
             ${followHtml}
-            <div class="lc-actions" onclick="event.stopPropagation()">
-              <button class="lc-btn" onclick="quickStage('${l.id}','Follow-up')">📞</button>
-              <button class="lc-btn won" onclick="quickStage('${l.id}','Order Confirmed')">✅ Won</button>
+            <div class="lc-actions">
+              ${nextBtn}
+              <button class="lc-btn won"  onclick="quickStage('${l.id}','Order Confirmed')">✅ Won</button>
               <button class="lc-btn lost" onclick="quickStage('${l.id}','Lost')">❌ Lost</button>
             </div>
           </div>
+
           ${l.notes?`<div class="lc-notes">💬 ${l.notes}</div>`:''}
+          ${histHtml}
         </div>
       </div>
     </div>`;
   }).join('');
 }
 
-// ── QUICK STAGE UPDATE ──
+// ── QUICK STAGE ──
 function quickStage(id, stage){
   const leads = getLeads();
   const i = leads.findIndex(l=>l.id===id);
   if(i<0) return;
+  const prev = leads[i].stage;
   leads[i].stage = stage;
   leads[i].updatedAt = td();
   leads[i].history = leads[i].history||[];
-  leads[i].history.push({stage, date:td(), note:'Quick update'});
+  leads[i].history.push({ stage, date:td(), note: prev+' → '+stage });
   saveLeads(leads);
   renderLeads(); updateStats();
-  toast('Updated → ' + stage, 'ok');
+  toast(STAGE_EMOJI[stage]+' '+stage,'ok');
 }
 
 // ── STATS ──
 function updateStats(){
   const leads = getLeads();
-  const count = s => leads.filter(l=>l.stage===s).length;
+  const c = s => leads.filter(l=>l.stage===s).length;
   document.getElementById('s-total').textContent = leads.length;
-  document.getElementById('s-new').textContent   = count('New Lead');
-  document.getElementById('s-quot').textContent  = count('Quotation Sent');
-  document.getElementById('s-follow').textContent= count('Follow-up');
-  document.getElementById('s-won').textContent   = count('Order Confirmed');
+  document.getElementById('s-new').textContent   = c('New Lead');
+  document.getElementById('s-quot').textContent  = c('Quotation Sent');
+  document.getElementById('s-follow').textContent= c('Follow-up');
+  document.getElementById('s-won').textContent   = c('Order Confirmed');
 
-  // Pipeline bar
-  const stages = ['New Lead','Quotation Sent','Follow-up','Order Confirmed','Lost'];
-  const colors = ['#0891c2','#6d3be8','#c97a00','#0d9e6e','#d43b3b'];
-  const total = leads.length || 1;
+  const stages=['New Lead','Quotation Sent','Follow-up','Order Confirmed','Lost'];
+  const colors=['#0891c2','#6d3be8','#c97a00','#0d9e6e','#d43b3b'];
+  const total = leads.length||1;
   document.getElementById('pipeline-bar').innerHTML = stages.map((s,i)=>{
-    const pct = Math.max((leads.filter(l=>l.stage===s).length/total)*100, 2);
-    return `<div class="pb-seg" style="flex:${pct};background:${colors[i]};min-width:4px" title="${s}"></div>`;
+    const pct = Math.max((c(s)/total)*100,2);
+    return `<div class="pb-seg" style="flex:${pct};background:${colors[i]};min-width:4px" title="${s}: ${c(s)}"></div>`;
   }).join('');
 
-  // Topbar stat
-  const won = count('Order Confirmed');
-  const rate = leads.length ? Math.round(won/leads.length*100) : 0;
-  document.getElementById('tb-stat').innerHTML = `Total: <b>${leads.length}</b> &nbsp;|&nbsp; Won: <b>${won}</b> &nbsp;|&nbsp; Rate: <b>${rate}%</b>`;
+  const won=c('Order Confirmed');
+  const rate=leads.length?Math.round(won/leads.length*100):0;
+  document.getElementById('tb-stat').innerHTML=`Total: <b>${leads.length}</b> &nbsp;|&nbsp; Won: <b>${won}</b> &nbsp;|&nbsp; Rate: <b>${rate}%</b>`;
 }
 
 // ── MODAL ──
 function openModal(id){
-  const leads = getLeads();
-  const l = leads.find(x=>x.id===id);
+  const leads=getLeads();
+  const l=leads.find(x=>x.id===id);
   if(!l) return;
-  SELECTED_LEAD = l;
-  const sc = STAGE_COLORS[l.stage]||STAGE_COLORS['New Lead'];
+  SELECTED_LEAD=l;
+  const sc=STAGE_COLORS[l.stage]||STAGE_COLORS['New Lead'];
 
-  document.getElementById('modal-title').textContent = l.name + (l.company?' · '+l.company:'');
-  document.getElementById('modal-body').innerHTML = `
+  document.getElementById('modal-title').textContent=l.name+(l.company?' · '+l.company:'');
+  document.getElementById('modal-body').innerHTML=`
     <div style="margin-bottom:.8rem">
-      <span class="lc-stage-badge" style="${sc.badge};font-size:.75rem;padding:.3rem .8rem">${STAGE_EMOJIS[l.stage]||''} ${l.stage}</span>
+      <span class="lc-stage-badge" style="${sc.badge};font-size:.75rem;padding:.3rem .8rem">${STAGE_EMOJI[l.stage]||''} ${l.stage}</span>
       <span style="font-size:.7rem;color:var(--muted);margin-left:.6rem">Added: ${l.date}</span>
     </div>
+    ${buildJourney(l)}
     <div class="detail-grid">
       <div class="detail-item"><div class="detail-label">Phone</div><div class="detail-val">${l.phone}</div></div>
       <div class="detail-item"><div class="detail-label">Email</div><div class="detail-val">${l.email||'—'}</div></div>
@@ -713,29 +765,24 @@ function openModal(id){
       <div class="detail-item"><div class="detail-label">Lead Source</div><div class="detail-val">${l.source||'—'}</div></div>
       <div class="detail-item"><div class="detail-label">Assigned To</div><div class="detail-val">${l.assigned||'—'}</div></div>
       <div class="detail-item"><div class="detail-label">Next Follow-up</div><div class="detail-val">${l.followup||'—'}</div></div>
-      <div class="detail-item"><div class="detail-label">Last Updated</div><div class="detail-val">${l.updatedAt||l.date}</div></div>
     </div>
     ${l.notes?`<div style="background:var(--bg);border-radius:8px;padding:.7rem .9rem;font-size:.82rem;color:var(--ink3);margin-bottom:.9rem">💬 ${l.notes}</div>`:''}
-
     <div style="font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem">Update Stage</div>
     <div class="stage-update-row">
       ${['New Lead','Quotation Sent','Follow-up','Order Confirmed','Lost'].map(s=>`
-        <button class="su-btn ${l.stage===s?'current':''}" data-s="${s}" onclick="updateStage('${l.id}','${s}')">${STAGE_EMOJIS[s]||''} ${s}</button>`).join('')}
+        <button class="su-btn ${l.stage===s?'current':''}" data-s="${s}" onclick="updateStageModal('${s}')">${STAGE_EMOJI[s]||''} ${s}</button>`).join('')}
     </div>
-
     <div style="margin-top:1rem">
       <div style="font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem">Update Follow-up Date</div>
       <input type="date" id="modal-followup" value="${l.followup||''}" style="background:var(--bg);border:1.5px solid var(--border);border-radius:8px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.5rem .75rem;width:180px">
     </div>
-
     <div style="margin-top:.8rem">
       <div style="font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.4rem">Add Note</div>
       <textarea id="modal-note" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:.55rem .75rem;resize:none;height:52px" placeholder="Koi update ya note..."></textarea>
     </div>
-
     <div style="margin-top:1rem">
       <div style="font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem">History</div>
-      <div style="display:flex;flex-direction:column;gap:.3rem;max-height:120px;overflow-y:auto">
+      <div style="display:flex;flex-direction:column;gap:.3rem;max-height:130px;overflow-y:auto">
         ${(l.history||[]).slice().reverse().map(h=>`
           <div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.72rem;padding:.3rem 0;border-bottom:1px dashed var(--border)">
             <span style="color:var(--muted);white-space:nowrap">${h.date}</span>
@@ -745,47 +792,45 @@ function openModal(id){
       </div>
     </div>`;
 
-  document.getElementById('modal-footer').innerHTML = `
+  document.getElementById('modal-footer').innerHTML=`
     <button onclick="deleteLead('${l.id}')" style="background:var(--red-l);color:var(--red);border:1px solid var(--red-m);border-radius:8px;padding:.55rem 1rem;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">🗑 Delete</button>
     <button onclick="saveModalUpdate('${l.id}')" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:.55rem 1.2rem;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 2px 8px rgba(26,79,214,.25)">💾 Save Update</button>`;
 
   document.getElementById('modal').classList.add('open');
 }
 
-function updateStage(id, stage){
+function updateStageModal(stage){
   document.querySelectorAll('.su-btn').forEach(b=>b.classList.remove('current'));
   document.querySelector(`.su-btn[data-s="${stage}"]`)?.classList.add('current');
 }
 
 function saveModalUpdate(id){
-  const leads = getLeads();
-  const i = leads.findIndex(l=>l.id===id);
+  const leads=getLeads();
+  const i=leads.findIndex(l=>l.id===id);
   if(i<0) return;
-
-  const newStage   = document.querySelector('.su-btn.current')?.dataset.s || leads[i].stage;
-  const newFollowup= document.getElementById('modal-followup').value;
-  const newNote    = document.getElementById('modal-note').value.trim();
+  const newStage    = document.querySelector('.su-btn.current')?.dataset.s||leads[i].stage;
+  const newFollowup = document.getElementById('modal-followup').value;
+  const newNote     = document.getElementById('modal-note').value.trim();
+  const prevStage   = leads[i].stage;
 
   leads[i].stage    = newStage;
   leads[i].followup = newFollowup;
   leads[i].updatedAt= td();
   leads[i].history  = leads[i].history||[];
-  if(newNote || newStage!==SELECTED_LEAD.stage){
-    leads[i].history.push({ stage:newStage, date:td(), note:newNote||'Stage updated' });
+  if(newNote||newStage!==prevStage){
+    leads[i].history.push({ stage:newStage, date:td(), note: newNote||(prevStage!==newStage?prevStage+' → '+newStage:'Updated') });
   }
-  if(newNote) leads[i].notes = newNote;
+  if(newNote) leads[i].notes=newNote;
 
   saveLeads(leads);
   closeModal();
   renderLeads(); updateStats();
 
-  // Sync update to Sheets
   if(SCRIPT_URL){
-    syncToSheets('updateLead', {
-      id: id, stage: newStage, followup: newFollowup, notes: newNote
-    }).then(ok => toast(ok ? '✅ Updated & synced!' : '💾 Updated locally', ok?'ok':''));
+    syncToSheets('updateLead',{id,stage:newStage,followup:newFollowup,notes:newNote})
+      .then(ok=>toast(ok?'✅ Updated & synced!':'💾 Updated locally',ok?'ok':''));
   } else {
-    toast('Lead updated!', 'ok');
+    toast('Lead updated!','ok');
   }
 }
 
@@ -798,21 +843,17 @@ function deleteLead(id){
 
 function closeModal(){ document.getElementById('modal').classList.remove('open'); }
 
-// ── SYNC TO SHEETS ──
-async function syncToSheets(action, payload) {
+// ── GOOGLE SHEETS SYNC ──
+async function syncToSheets(action, payload){
   if(!SCRIPT_URL) return false;
   try {
-    const res = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({action, payload})
-    });
+    const res = await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({action,payload})});
     const d = await res.json();
     return d.ok;
   } catch {
     try {
-      // JSONP fallback
-      const params = encodeURIComponent(JSON.stringify({action, payload}));
-      const res = await fetch(SCRIPT_URL + '?data=' + params);
+      const params = encodeURIComponent(JSON.stringify({action,payload}));
+      const res = await fetch(SCRIPT_URL+'?data='+params);
       const d = await res.json();
       return d.ok;
     } catch { return false; }
