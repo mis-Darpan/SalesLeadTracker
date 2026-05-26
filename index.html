@@ -267,6 +267,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
   <!-- Toolbar -->
   <div class="toolbar">
     <input class="fsearch" type="text" id="search-inp" placeholder="🔍 Name, company, phone search karo..." oninput="renderTable()">
+    <button onclick="loadFromSheets()" id="sync-btn" style="margin-left:.3rem;background:var(--green-l);color:var(--green);border:1px solid var(--green-m);border-radius:6px;padding:.35rem .8rem;font-size:.7rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:.3rem;">☁️ Sheet se Load</button>
     <span class="sort-lbl">Sort:</span>
     <button class="sort-btn on" onclick="setSort('date',this)">Latest</button>
     <button class="sort-btn"    onclick="setSort('name',this)">Name</button>
@@ -429,7 +430,7 @@ const S_COLOR={
   'Order Confirmed':{badge:'background:#edfaf5;color:#0d9e6e'},
   'Lost':           {badge:'background:#fff0f0;color:#d43b3b'},
 };
-const GS_HEADERS=['ID','Date Added','Customer Name','Phone','Email','Company','City','State','Application','Voltage','Capacity','No. of Batteries','Existing Brand','Lead Source','Budget','Stage','Follow-up Date','Assigned To','Notes','Last Updated'];
+const GS_HEADERS=['Lead ID','Date Added','Customer Name','Phone','Email','Company','City','State','Application Type','Voltage','Capacity','No. of Batteries','Existing Brand','Budget Range','Lead Source','Stage','Next Follow-up','Assigned To','Notes','Last Updated'];
 
 let FILTER='All', SORT='date';
 
@@ -510,6 +511,33 @@ function fuHtml(followup){
   if(diff===0)      return `<span class="fu-due">📞 Aaj!</span>`;
   if(diff<=2)       return `<span class="fu-due">📞 ${diff}d baad</span>`;
   return `<span class="fu-ok">📅 ${followup}</span>`;
+}
+
+// ── LOAD FROM GOOGLE SHEETS ──
+async function loadFromSheets(){
+  const btn=document.getElementById('sync-btn');
+  btn.textContent='⏳ Loading...'; btn.disabled=true;
+  try{
+    const url=SCRIPT_URL+'?action=getLeads&stage=All';
+    const r=await fetch(url);
+    const d=await r.json();
+    if(d.ok && d.leads && d.leads.length){
+      // Merge: Sheet leads override local, keep history from local if exists
+      const local=getLeads();
+      const merged=d.leads.map(sl=>{
+        const loc=local.find(l=>l.id===sl.id);
+        return {...sl, history: loc?.history||[{stage:sl.stage,date:sl.date,note:'Loaded from Sheet'}]};
+      });
+      saveLeads(merged);
+      renderTable(); updateStats();
+      toast('✅ '+merged.length+' leads Sheet se load ho gaye!','ok');
+    } else {
+      toast('Sheet mein koi data nahi mila','err');
+    }
+  }catch(e){
+    toast('❌ Sheet se load nahi hua — Script check karo','err');
+  }
+  btn.textContent='☁️ Sheet se Load'; btn.disabled=false;
 }
 
 // ── RENDER TABLE ──
@@ -615,7 +643,18 @@ function buildJourney(lead){
 
 // ── DETAIL MODAL ──
 function buildSheetRow(l){
-  return [l.id,l.date,l.name,l.phone,l.email||'',l.company||'',l.city||'',l.state||'',l.oem||'',l.voltage||'',l.capacity||'',l.fleet||'',l.model||'',l.source||'',l.amount||'',l.stage,l.followup||'',l.assigned||'',l.notes||'',l.updatedAt||l.date];
+  // Order matches Apps Script LEAD_HEADERS exactly:
+  // Lead ID, Date Added, Customer Name, Phone, Email, Company, City, State,
+  // Application Type, Voltage, Capacity, No. of Batteries, Existing Brand,
+  // Budget Range, Lead Source, Stage, Next Follow-up, Assigned To, Notes, Last Updated
+  return [
+    l.id, l.date, l.name, l.phone, l.email||'',
+    l.company||'', l.city||'', l.state||'',
+    l.oem||'', l.voltage||'', l.capacity||'', l.fleet||'',
+    l.model||'', l.amount||'', l.source||'',
+    l.stage, l.followup||'', l.assigned||'', l.notes||'',
+    l.updatedAt||l.date
+  ];
 }
 
 function openDetail(id){
