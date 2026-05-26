@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Litpax — Sales Lead Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0a0f1e;
+  --ink2: #1e2a45;
+  --ink3: #3d4f6e;
+  --muted: #7a8aaa;
+  --muted2: #b0bdd4;
+  --bg: #f4f6fb;
+  --bg2: #eaecf5;
+  --white: #ffffff;
+  --border: #dde3f0;
+  --border2: #c8d0e8;
+
+  --blue: #1a4fd6;
+  --blue-l: #eef3ff;
+  --blue-m: #c2d2f8;
+
+  --green: #0d9e6e;
+  --green-l: #edfaf5;
+  --green-m: #a7edd8;
+
+  --amber: #c97a00;
+  --amber-l: #fff8eb;
+  --amber-m: #fde5a3;
+
+  --red: #d43b3b;
+  --red-l: #fff0f0;
+  --red-m: #f8c4c4;
+
+  --purple: #6d3be8;
+  --purple-l: #f3effe;
+  --purple-m: #d3bef8;
+
+  --sky: #0891c2;
+  --sky-l: #ecf9ff;
+
+  --sh: 0 1px 4px rgba(10,15,30,.07), 0 2px 8px rgba(10,15,30,.04);
+  --sh2: 0 4px 20px rgba(10,15,30,.10);
+  --sh3: 0 12px 40px rgba(10,15,30,.14);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--ink);
+  padding: .85rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 12px rgba(10,15,30,.25);
+}
+.tb-logo { display: flex; align-items: center; gap: .7rem; }
+.tb-badge {
+  background: var(--blue); color: #fff;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600;
+  padding: 4px 10px; border-radius: 5px; letter-spacing: .5px;
+}
+.tb-name { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: #fff; }
+.tb-sub { font-size: .7rem; color: rgba(255,255,255,.4); margin-top: 1px; }
+.tb-right { display: flex; align-items: center; gap: .8rem; }
+.tb-stat {
+  text-align: right;
+  font-size: .68rem; color: rgba(255,255,255,.45);
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.6;
+}
+.tb-stat b { color: rgba(255,255,255,.85); font-size: .82rem; }
+
+/* ── LAYOUT ── */
+.layout { display: grid; grid-template-columns: 320px 1fr; min-height: calc(100vh - 52px); }
+
+/* ── SIDEBAR FORM ── */
+.form-panel {
+  background: var(--white); border-right: 1px solid var(--border);
+  overflow-y: auto; height: calc(100vh - 52px);
+  position: sticky; top: 52px;
+}
+.fp-header {
+  padding: 1.2rem 1.4rem;
+  background: linear-gradient(135deg, #1a3a8a, #1a4fd6);
+  border-bottom: 1px solid var(--border);
+}
+.fp-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: #fff; }
+.fp-sub { font-size: .68rem; color: rgba(255,255,255,.6); margin-top: .2rem; }
+.fp-body { padding: 1.1rem 1.2rem; }
+.fp-section { margin-bottom: 1rem; }
+.fp-sec-title {
+  font-size: .6rem; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: .6rem; padding-bottom: .3rem;
+  border-bottom: 1px solid var(--border);
+}
+.fld { display: flex; flex-direction: column; gap: .25rem; margin-bottom: .6rem; }
+.fld label { font-size: .68rem; font-weight: 600; color: var(--ink3); }
+.fld .req { color: var(--red); }
+.fld input, .fld select, .fld textarea {
+  background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px;
+  color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: .85rem;
+  padding: .55rem .75rem; width: 100%; transition: all .2s; -webkit-appearance: none;
+}
+.fld input:focus, .fld select:focus, .fld textarea:focus {
+  outline: none; border-color: var(--blue); background: #fff;
+  box-shadow: 0 0 0 3px var(--blue-l);
+}
+.fld select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237a8aaa' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right .75rem center; padding-right: 2.2rem;
+}
+.fld textarea { resize: none; height: 60px; font-size: .82rem; }
+.frow { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; }
+.stage-pills { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .3rem; }
+.stage-pill {
+  padding: .38rem .75rem; border-radius: 20px; font-size: .72rem; font-weight: 600;
+  border: 1.5px solid var(--border); cursor: pointer; transition: all .18s;
+  color: var(--muted); background: var(--bg); user-select: none;
+}
+.stage-pill:hover { border-color: var(--blue-m); color: var(--blue); background: var(--blue-l); }
+.stage-pill.sel { color: #fff; border-color: transparent; }
+.stage-pill[data-stage="New Lead"].sel { background: var(--sky); }
+.stage-pill[data-stage="Quotation Sent"].sel { background: var(--purple); }
+.stage-pill[data-stage="Follow-up"].sel { background: var(--amber); color: #fff; }
+.stage-pill[data-stage="Order Confirmed"].sel { background: var(--green); }
+.stage-pill[data-stage="Lost"].sel { background: var(--red); }
+.btn-add {
+  width: 100%; background: var(--blue); color: #fff; border: none; border-radius: 9px;
+  padding: .82rem; font-family: 'Syne', sans-serif; font-size: .9rem; font-weight: 700;
+  cursor: pointer; letter-spacing: .3px; transition: all .2s;
+  box-shadow: 0 4px 12px rgba(26,79,214,.3); margin-top: .5rem;
+  display: flex; align-items: center; justify-content: center; gap: .5rem;
+}
+.btn-add:hover { background: #1440b8; transform: translateY(-1px); }
+.btn-add:active { transform: scale(.98); }
+.btn-add:disabled { background: var(--border2); box-shadow: none; cursor: not-allowed; color: var(--muted); }
+
+/* ── MAIN PANEL ── */
+.main-panel { padding: 1.4rem; overflow-y: auto; }
+
+/* ── TOP STATS ── */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: .7rem; margin-bottom: 1.2rem;
+}
+.stat-card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+  padding: .9rem 1rem; box-shadow: var(--sh); position: relative; overflow: hidden;
+}
+.stat-card::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.sc-blue::after { background: var(--blue); }
+.sc-sky::after { background: var(--sky); }
+.sc-purple::after { background: var(--purple); }
+.sc-amber::after { background: var(--amber); }
+.sc-green::after { background: var(--green); }
+.sc-red::after { background: var(--red); }
+.stat-val {
+  font-family: 'JetBrains Mono', monospace; font-size: 1.7rem;
+  font-weight: 600; color: var(--ink); line-height: 1;
+}
+.stat-label {
+  font-size: .62rem; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .6px; margin-top: .3rem;
+}
+
+/* ── FILTERS ── */
+.filters {
+  display: flex; align-items: center; gap: .6rem; margin-bottom: 1rem; flex-wrap: wrap;
+}
+.filter-btn {
+  padding: .4rem .9rem; border-radius: 20px; font-size: .75rem; font-weight: 600;
+  border: 1.5px solid var(--border); cursor: pointer; transition: all .15s;
+  color: var(--muted); background: var(--white); font-family: 'DM Sans', sans-serif;
+}
+.filter-btn:hover { border-color: var(--blue-m); color: var(--blue); }
+.filter-btn.active { color: #fff; border-color: transparent; }
+.fb-all.active { background: var(--ink); }
+.fb-new.active { background: var(--sky); }
+.fb-quot.active { background: var(--purple); }
+.fb-follow.active { background: var(--amber); }
+.fb-won.active { background: var(--green); }
+.fb-lost.active { background: var(--red); }
+.filter-search {
+  margin-left: auto; background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: .4rem .8rem; font-family: 'DM Sans', sans-serif;
+  font-size: .8rem; color: var(--ink); outline: none; transition: all .2s; width: 180px;
+}
+.filter-search:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-l); }
+
+/* ── LEAD CARDS ── */
+.leads-grid { display: flex; flex-direction: column; gap: .65rem; }
+.lead-card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+  padding: 0; box-shadow: var(--sh); overflow: hidden; transition: all .2s;
+  cursor: pointer;
+}
+.lead-card:hover { box-shadow: var(--sh2); transform: translateY(-1px); border-color: var(--border2); }
+.lc-top { display: flex; align-items: stretch; }
+.lc-stage-bar { width: 5px; flex-shrink: 0; }
+.lc-bar-new { background: var(--sky); }
+.lc-bar-quot { background: var(--purple); }
+.lc-bar-follow { background: var(--amber); }
+.lc-bar-won { background: var(--green); }
+.lc-bar-lost { background: var(--red); }
+.lc-body { flex: 1; padding: .85rem 1rem; }
+.lc-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: .5rem; gap: .5rem; }
+.lc-name { font-family: 'Syne', sans-serif; font-size: .95rem; font-weight: 700; color: var(--ink); }
+.lc-company { font-size: .72rem; color: var(--muted); margin-top: .1rem; }
+.lc-stage-badge {
+  font-size: .62rem; font-weight: 700; padding: .22rem .65rem; border-radius: 20px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.lc-meta { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .5rem; }
+.lc-chip {
+  font-size: .65rem; color: var(--ink3); background: var(--bg);
+  border: 1px solid var(--border); border-radius: 5px;
+  padding: .18rem .5rem; font-family: 'JetBrains Mono', monospace;
+}
+.lc-footer { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.lc-follow-date {
+  font-size: .68rem; font-weight: 600;
+  display: flex; align-items: center; gap: .3rem;
+}
+.lc-follow-ok { color: var(--green); }
+.lc-follow-due { color: var(--amber); }
+.lc-follow-over { color: var(--red); }
+.lc-actions { display: flex; gap: .3rem; }
+.lc-btn {
+  font-size: .65rem; font-weight: 700; padding: .25rem .6rem; border-radius: 5px;
+  border: 1px solid var(--border); cursor: pointer; background: var(--bg);
+  color: var(--ink3); font-family: 'DM Sans', sans-serif; transition: all .15s;
+}
+.lc-btn:hover { background: var(--blue-l); border-color: var(--blue-m); color: var(--blue); }
+.lc-btn.won { background: var(--green-l); border-color: var(--green-m); color: var(--green); }
+.lc-btn.lost { background: var(--red-l); border-color: var(--red-m); color: var(--red); }
+.lc-notes { font-size: .72rem; color: var(--muted); margin-top: .4rem; padding-top: .4rem; border-top: 1px dashed var(--border); font-style: italic; }
+
+/* ── PROGRESS BAR ── */
+.pipeline-bar { display: flex; height: 8px; border-radius: 5px; overflow: hidden; margin-bottom: 1.2rem; gap: 2px; }
+.pb-seg { flex: 1; border-radius: 3px; transition: flex .4s ease; }
+
+/* ── MODAL ── */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(10,15,30,.55); z-index: 200; align-items: center; justify-content: center; padding: 1.5rem; backdrop-filter: blur(4px); }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--white); border-radius: 16px; width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto; box-shadow: var(--sh3); animation: modalIn .22s ease; }
+@keyframes modalIn { from { opacity: 0; transform: scale(.96) translateY(10px); } to { opacity: 1; transform: none; } }
+.modal-head {
+  padding: 1.2rem 1.4rem; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(135deg, #0f1e45, #1a4fd6); border-radius: 16px 16px 0 0;
+}
+.modal-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: #fff; }
+.modal-close { background: rgba(255,255,255,.15); border: none; color: #fff; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+.modal-body { padding: 1.2rem 1.4rem; }
+.modal-footer { padding: .9rem 1.4rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: .6rem; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-bottom: 1rem; }
+.detail-item { background: var(--bg); border-radius: 8px; padding: .65rem .85rem; }
+.detail-label { font-size: .58rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: .2rem; }
+.detail-val { font-size: .85rem; font-weight: 500; color: var(--ink); }
+.stage-update-row { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .4rem; }
+.su-btn {
+  padding: .42rem .9rem; border-radius: 20px; font-size: .75rem; font-weight: 700;
+  border: 1.5px solid var(--border); cursor: pointer; transition: all .18s;
+  background: var(--bg); color: var(--muted); font-family: 'DM Sans', sans-serif;
+}
+.su-btn:hover { transform: scale(1.03); }
+.su-btn[data-s="New Lead"] { border-color: var(--sky); color: var(--sky); }
+.su-btn[data-s="Quotation Sent"] { border-color: var(--purple); color: var(--purple); }
+.su-btn[data-s="Follow-up"] { border-color: var(--amber); color: var(--amber); }
+.su-btn[data-s="Order Confirmed"] { border-color: var(--green); color: var(--green); }
+.su-btn[data-s="Lost"] { border-color: var(--red); color: var(--red); }
+.su-btn.current { color: #fff; border-color: transparent; }
+.su-btn[data-s="New Lead"].current { background: var(--sky); }
+.su-btn[data-s="Quotation Sent"].current { background: var(--purple); }
+.su-btn[data-s="Follow-up"].current { background: var(--amber); }
+.su-btn[data-s="Order Confirmed"].current { background: var(--green); }
+.su-btn[data-s="Lost"].current { background: var(--red); }
+
+/* TOAST */
+.toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--ink); color: #fff; padding: .75rem 1.2rem; border-radius: 10px; font-size: .82rem; font-weight: 600; z-index: 300; opacity: 0; transform: translateY(12px); transition: all .28s; box-shadow: var(--sh3); }
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.ok { background: var(--green); }
+.toast.err { background: var(--red); }
+
+.empty-state { text-align: center; padding: 4rem 2rem; color: var(--muted); }
+.empty-icon { font-size: 2.5rem; opacity: .35; margin-bottom: .6rem; }
+.empty-title { font-family: 'Syne', sans-serif; font-size: .95rem; font-weight: 700; color: var(--ink3); margin-bottom: .3rem; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="tb-logo">
+    <div class="tb-badge">LITPAX</div>
+    <div>
+      <div class="tb-name">Sales Lead Tracker</div>
+      <div class="tb-sub">Pipeline Management System</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <div class="tb-stat" id="tb-stat">Loading...</div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- LEFT: ADD LEAD FORM -->
+  <div class="form-panel">
+    <div class="fp-header">
+      <div class="fp-title">+ Add New Lead</div>
+      <div class="fp-sub">Naya prospect add karo pipeline mein</div>
+    </div>
+    <div class="fp-body">
+
+      <div class="fp-section">
+        <div class="fp-sec-title">Customer Info</div>
+        <div class="fld"><label>Customer Name <span class="req">*</span></label><input type="text" id="f-name" placeholder="Full name" autocomplete="off"></div>
+        <div class="frow">
+          <div class="fld"><label>Phone <span class="req">*</span></label><input type="tel" id="f-phone" placeholder="Mobile"></div>
+          <div class="fld"><label>Email</label><input type="email" id="f-email" placeholder="email@..."></div>
+        </div>
+        <div class="fld"><label>Company Name</label><input type="text" id="f-company" placeholder="Company / Dealer"></div>
+        <div class="frow">
+          <div class="fld"><label>City</label><input type="text" id="f-city" placeholder="City"></div>
+          <div class="fld"><label>State</label><input type="text" id="f-state" placeholder="State"></div>
+        </div>
+      </div>
+
+      <div class="fp-section">
+        <div class="fp-sec-title">Battery Requirement</div>
+        <div class="fld"><label>Application Type <span class="req">*</span></label>
+          <select id="f-oem">
+            <option value="">-- Select Application --</option>
+            <option>2 Wheeler (Electric Bike/Scooter)</option>
+            <option>3 Wheeler (E-Rickshaw/Auto)</option>
+            <option>Solar (Home/Commercial)</option>
+            <option>Inverter / Home UPS</option>
+            <option>Cycle (E-Cycle)</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Voltage (V)</label>
+            <select id="f-voltage">
+              <option value="">-- V --</option>
+              <option>12V</option><option>24V</option><option>36V</option>
+              <option>48V</option><option>60V</option><option>72V</option>
+              <option>96V</option><option>Custom</option>
+            </select>
+          </div>
+          <div class="fld"><label>Capacity (Ah)</label>
+            <select id="f-capacity">
+              <option value="">-- Ah --</option>
+              <option>20Ah</option><option>30Ah</option><option>40Ah</option>
+              <option>50Ah</option><option>60Ah</option><option>75Ah</option>
+              <option>100Ah</option><option>150Ah</option><option>200Ah</option>
+              <option>Custom</option>
+            </select>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>No. of Batteries</label><input type="number" id="f-fleet" placeholder="Qty required" min="1"></div>
+          <div class="fld"><label>Budget Range (₹)</label>
+            <select id="f-amount">
+              <option value="">-- Select --</option>
+              <option value="Under 5000">Under ₹5,000</option>
+              <option value="5000-10000">₹5,000 – ₹10,000</option>
+              <option value="10000-25000">₹10,000 – ₹25,000</option>
+              <option value="25000-50000">₹25,000 – ₹50,000</option>
+              <option value="50000-100000">₹50,000 – ₹1,00,000</option>
+              <option value="Above 100000">Above ₹1,00,000</option>
+            </select>
+          </div>
+        </div>
+        <div class="fld"><label>Existing Battery Brand</label>
+          <select id="f-model">
+            <option value="">-- Current brand --</option>
+            <option>Exide</option><option>Amaron</option><option>Luminous</option>
+            <option>Okaya</option><option>Livguard</option><option>Su-Kam</option>
+            <option>Microtek</option><option>Loom Solar</option>
+            <option>Local Brand</option><option>No Battery (New)</option><option>Other</option>
+          </select>
+        </div>
+        <div class="fld"><label>Lead Source</label>
+          <select id="f-source">
+            <option value="">-- Select --</option>
+            <option>Walk-in</option><option>Referral</option><option>Exhibition / Mela</option>
+            <option>Social Media</option><option>WhatsApp</option>
+            <option>Cold Call</option><option>Dealer</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fp-section">
+        <div class="fp-sec-title">Stage & Follow-up</div>
+        <div class="fld">
+          <label>Stage <span class="req">*</span></label>
+          <div class="stage-pills">
+            <div class="stage-pill sel" data-stage="New Lead" onclick="selStage(this)">🆕 New Lead</div>
+            <div class="stage-pill" data-stage="Quotation Sent" onclick="selStage(this)">📄 Quotation Sent</div>
+            <div class="stage-pill" data-stage="Follow-up" onclick="selStage(this)">📞 Follow-up</div>
+            <div class="stage-pill" data-stage="Order Confirmed" onclick="selStage(this)">✅ Order Confirmed</div>
+            <div class="stage-pill" data-stage="Lost" onclick="selStage(this)">❌ Lost</div>
+          </div>
+          <input type="hidden" id="f-stage" value="New Lead">
+        </div>
+        <div class="fld"><label>Next Follow-up Date</label><input type="date" id="f-followup"></div>
+        <div class="fld"><label>Notes / Remarks</label><textarea id="f-notes" placeholder="Koi important info..."></textarea></div>
+        <div class="fld"><label>Assigned To</label>
+          <select id="f-assigned">
+            <option value="">-- Select --</option>
+            <option>Sukhpal</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-add" id="add-btn" onclick="addLead()">
+        <span>⚡</span> Add to Pipeline
+      </button>
+    </div>
+  </div>
+
+  <!-- RIGHT: PIPELINE VIEW -->
+  <div class="main-panel">
+
+    <!-- Stats -->
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card sc-blue"><div class="stat-val" id="s-total">0</div><div class="stat-label">Total Leads</div></div>
+      <div class="stat-card sc-sky"><div class="stat-val" id="s-new">0</div><div class="stat-label">New Leads</div></div>
+      <div class="stat-card sc-purple"><div class="stat-val" id="s-quot">0</div><div class="stat-label">Quotation Sent</div></div>
+      <div class="stat-card sc-amber"><div class="stat-val" id="s-follow">0</div><div class="stat-label">Follow-up</div></div>
+      <div class="stat-card sc-green"><div class="stat-val" id="s-won">0</div><div class="stat-label">Won</div></div>
+    </div>
+
+    <!-- Pipeline Bar -->
+    <div class="pipeline-bar" id="pipeline-bar"></div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <button class="filter-btn fb-all active" onclick="setFilter('All',this)">All</button>
+      <button class="filter-btn fb-new" onclick="setFilter('New Lead',this)">🆕 New</button>
+      <button class="filter-btn fb-quot" onclick="setFilter('Quotation Sent',this)">📄 Quotation</button>
+      <button class="filter-btn fb-follow" onclick="setFilter('Follow-up',this)">📞 Follow-up</button>
+      <button class="filter-btn fb-won" onclick="setFilter('Order Confirmed',this)">✅ Won</button>
+      <button class="filter-btn fb-lost" onclick="setFilter('Lost',this)">❌ Lost</button>
+      <input class="filter-search" type="text" placeholder="Search name / company..." oninput="renderLeads()" id="search-inp">
+    </div>
+
+    <!-- Leads -->
+    <div class="leads-grid" id="leads-grid"></div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-title">Lead Details</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ──
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyV0Y8xU1KjqOjjCbhm93u8m-zau60rOYEiHARB8oq1GBeUT9kaoLlEWUwCkX-Oqo16/exec';
+
+// ── STORAGE ──
+function getLeads(){ return JSON.parse(localStorage.getItem('litpax_leads')||'[]'); }
+function saveLeads(l){ localStorage.setItem('litpax_leads', JSON.stringify(l)); }
+
+// ── STATE ──
+let FILTER = 'All';
+let SELECTED_LEAD = null;
+
+// ── HELPERS ──
+function td(){ return new Date().toISOString().slice(0,10); }
+function toast(msg, type=''){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show' + (type?' '+type:'');
+  setTimeout(()=>t.classList.remove('show'), 2600);
+}
+
+const STAGE_COLORS = {
+  'New Lead':         { bar:'lc-bar-new',   badge:'background:#e0f5fd;color:#0891c2', },
+  'Quotation Sent':   { bar:'lc-bar-quot',  badge:'background:#f3effe;color:#6d3be8', },
+  'Follow-up':        { bar:'lc-bar-follow',badge:'background:#fff8eb;color:#c97a00', },
+  'Order Confirmed':  { bar:'lc-bar-won',   badge:'background:#edfaf5;color:#0d9e6e', },
+  'Lost':             { bar:'lc-bar-lost',  badge:'background:#fff0f0;color:#d43b3b', },
+};
+const STAGE_EMOJIS = {'New Lead':'🆕','Quotation Sent':'📄','Follow-up':'📞','Order Confirmed':'✅','Lost':'❌'};
+
+// ── STAGE SELECT ──
+function selStage(el){
+  document.querySelectorAll('#form-panel .stage-pill, .form-panel .stage-pill').forEach(p=>p.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('f-stage').value = el.dataset.stage;
+}
+
+// ── ADD LEAD ──
+function addLead(){
+  const name  = document.getElementById('f-name').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const oem   = document.getElementById('f-oem').value;
+  const stage = document.getElementById('f-stage').value;
+  if(!name||!phone||!oem||!stage){ toast('Name, Phone aur Application Type required hai','err'); return; }
+
+  const btn = document.getElementById('add-btn');
+  btn.disabled = true; btn.innerHTML = '<span>⏳</span> Adding...';
+
+  const lead = {
+    id:       'LD' + Date.now(),
+    date:     td(),
+    name, phone,
+    email:    document.getElementById('f-email').value.trim(),
+    company:  document.getElementById('f-company').value.trim(),
+    city:     document.getElementById('f-city').value.trim(),
+    state:    document.getElementById('f-state').value.trim(),
+    oem,
+    voltage:  document.getElementById('f-voltage').value,
+    capacity: document.getElementById('f-capacity').value,
+    fleet:    document.getElementById('f-fleet').value,
+    model:    document.getElementById('f-model').value,
+    source:   document.getElementById('f-source').value,
+    amount:   document.getElementById('f-amount').value,
+    stage,
+    followup: document.getElementById('f-followup').value,
+    notes:    document.getElementById('f-notes').value.trim(),
+    assigned: document.getElementById('f-assigned').value,
+    history:  [{ stage, date: td(), note: 'Lead added' }],
+    updatedAt: td()
+  };
+
+  const leads = getLeads();
+  leads.unshift(lead);
+  saveLeads(leads);
+  renderLeads();
+  updateStats();
+
+  // Sync to Google Sheets
+  if(SCRIPT_URL){
+    syncToSheets('addLead', lead)
+      .then(ok => {
+        lead.synced = ok;
+        saveLeads(getLeads().map(l => l.id===lead.id ? {...l, synced:ok} : l));
+        toast(ok ? '✅ Lead added & synced!' : '💾 Lead saved locally', ok?'ok':'');
+      });
+  } else {
+    toast('✅ Lead added — ' + name, 'ok');
+  }
+
+  resetForm();
+  btn.disabled = false; btn.innerHTML = '<span>⚡</span> Add to Pipeline';
+}
+
+function resetForm(){
+  ['f-name','f-phone','f-email','f-company','f-city','f-state','f-fleet','f-notes','f-followup'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  ['f-oem','f-voltage','f-capacity','f-model','f-source','f-assigned','f-amount'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  document.querySelectorAll('.stage-pill').forEach(p=>p.classList.remove('sel'));
+  document.querySelector('.stage-pill[data-stage="New Lead"]').classList.add('sel');
+  document.getElementById('f-stage').value = 'New Lead';
+}
+
+// ── FILTER ──
+function setFilter(f, el){
+  FILTER = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderLeads();
+}
+
+// ── RENDER ──
+function renderLeads(){
+  const leads = getLeads();
+  const q = (document.getElementById('search-inp')?.value||'').toLowerCase();
+  let filtered = leads.filter(l => {
+    const matchFilter = FILTER==='All' || l.stage===FILTER;
+    const matchSearch = !q || l.name.toLowerCase().includes(q) || (l.company||'').toLowerCase().includes(q) || (l.phone||'').includes(q);
+    return matchFilter && matchSearch;
+  });
+
+  const grid = document.getElementById('leads-grid');
+  if(!filtered.length){
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🎯</div><div class="empty-title">Koi lead nahi</div><div style="font-size:.75rem;color:var(--muted);margin-top:.2rem">Filter change karo ya naya lead add karo</div></div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(l => {
+    const sc = STAGE_COLORS[l.stage] || STAGE_COLORS['New Lead'];
+    const today = td();
+    let followHtml = '';
+    if(l.followup){
+      const diff = Math.round((new Date(l.followup)-new Date(today))/(1000*60*60*24));
+      if(diff < 0) followHtml = `<span class="lc-follow-date lc-follow-over">⚠️ Overdue by ${Math.abs(diff)} days</span>`;
+      else if(diff === 0) followHtml = `<span class="lc-follow-date lc-follow-due">📞 Follow-up Today!</span>`;
+      else if(diff <= 2) followHtml = `<span class="lc-follow-date lc-follow-due">📞 ${diff} days left</span>`;
+      else followHtml = `<span class="lc-follow-date lc-follow-ok">📅 ${l.followup}</span>`;
+    }
+    return `
+    <div class="lead-card" onclick="openModal('${l.id}')">
+      <div class="lc-top">
+        <div class="lc-stage-bar ${sc.bar}"></div>
+        <div class="lc-body">
+          <div class="lc-header">
+            <div>
+              <div class="lc-name">${l.name}</div>
+              <div class="lc-company">${l.company||'Individual'} · ${l.city||''}</div>
+            </div>
+            <span class="lc-stage-badge" style="${sc.badge}">${STAGE_EMOJIS[l.stage]||''} ${l.stage}</span>
+          </div>
+          <div class="lc-meta">
+            <span class="lc-chip">📱 ${l.phone}</span>
+            <span class="lc-chip">🏷️ ${l.oem}</span>
+            ${l.fleet?`<span class="lc-chip">🔋 ${l.fleet} units</span>`:''}
+            ${l.voltage||l.capacity?`<span class="lc-chip">⚡ ${l.voltage||''} ${l.capacity||''}</span>`:''}
+            ${l.amount?`<span class="lc-chip">💰 ${l.amount}</span>`:''}
+            ${l.assigned?`<span class="lc-chip">👤 ${l.assigned}</span>`:''}
+          </div>
+          <div class="lc-footer">
+            ${followHtml}
+            <div class="lc-actions" onclick="event.stopPropagation()">
+              <button class="lc-btn" onclick="quickStage('${l.id}','Follow-up')">📞</button>
+              <button class="lc-btn won" onclick="quickStage('${l.id}','Order Confirmed')">✅ Won</button>
+              <button class="lc-btn lost" onclick="quickStage('${l.id}','Lost')">❌ Lost</button>
+            </div>
+          </div>
+          ${l.notes?`<div class="lc-notes">💬 ${l.notes}</div>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── QUICK STAGE UPDATE ──
+function quickStage(id, stage){
+  const leads = getLeads();
+  const i = leads.findIndex(l=>l.id===id);
+  if(i<0) return;
+  leads[i].stage = stage;
+  leads[i].updatedAt = td();
+  leads[i].history = leads[i].history||[];
+  leads[i].history.push({stage, date:td(), note:'Quick update'});
+  saveLeads(leads);
+  renderLeads(); updateStats();
+  toast('Updated → ' + stage, 'ok');
+}
+
+// ── STATS ──
+function updateStats(){
+  const leads = getLeads();
+  const count = s => leads.filter(l=>l.stage===s).length;
+  document.getElementById('s-total').textContent = leads.length;
+  document.getElementById('s-new').textContent   = count('New Lead');
+  document.getElementById('s-quot').textContent  = count('Quotation Sent');
+  document.getElementById('s-follow').textContent= count('Follow-up');
+  document.getElementById('s-won').textContent   = count('Order Confirmed');
+
+  // Pipeline bar
+  const stages = ['New Lead','Quotation Sent','Follow-up','Order Confirmed','Lost'];
+  const colors = ['#0891c2','#6d3be8','#c97a00','#0d9e6e','#d43b3b'];
+  const total = leads.length || 1;
+  document.getElementById('pipeline-bar').innerHTML = stages.map((s,i)=>{
+    const pct = Math.max((leads.filter(l=>l.stage===s).length/total)*100, 2);
+    return `<div class="pb-seg" style="flex:${pct};background:${colors[i]};min-width:4px" title="${s}"></div>`;
+  }).join('');
+
+  // Topbar stat
+  const won = count('Order Confirmed');
+  const rate = leads.length ? Math.round(won/leads.length*100) : 0;
+  document.getElementById('tb-stat').innerHTML = `Total: <b>${leads.length}</b> &nbsp;|&nbsp; Won: <b>${won}</b> &nbsp;|&nbsp; Rate: <b>${rate}%</b>`;
+}
+
+// ── MODAL ──
+function openModal(id){
+  const leads = getLeads();
+  const l = leads.find(x=>x.id===id);
+  if(!l) return;
+  SELECTED_LEAD = l;
+  const sc = STAGE_COLORS[l.stage]||STAGE_COLORS['New Lead'];
+
+  document.getElementById('modal-title').textContent = l.name + (l.company?' · '+l.company:'');
+  document.getElementById('modal-body').innerHTML = `
+    <div style="margin-bottom:.8rem">
+      <span class="lc-stage-badge" style="${sc.badge};font-size:.75rem;padding:.3rem .8rem">${STAGE_EMOJIS[l.stage]||''} ${l.stage}</span>
+      <span style="font-size:.7rem;color:var(--muted);margin-left:.6rem">Added: ${l.date}</span>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-item"><div class="detail-label">Phone</div><div class="detail-val">${l.phone}</div></div>
+      <div class="detail-item"><div class="detail-label">Email</div><div class="detail-val">${l.email||'—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Company</div><div class="detail-val">${l.company||'—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Location</div><div class="detail-val">${[l.city,l.state].filter(Boolean).join(', ')||'—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Application</div><div class="detail-val">${l.oem||'—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Voltage / Capacity</div><div class="detail-val">${[l.voltage,l.capacity].filter(Boolean).join(' / ')||'—'}</div></div>
+      <div class="detail-item"><div class="detail-label">No. of Batteries</div><div class="detail-val">${l.fleet||'—'} units</div></div>
+      <div class="detail-item"><div class="detail-label">Existing Brand</div><div class="detail-val">${l.model||'—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Budget Range</div><div class="detail-val">${l.amount||'—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Lead Source</div><div class="detail-val">${l.source||'—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Assigned To</div><div class="detail-val">${l.assigned||'—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Next Follow-up</div><div class="detail-val">${l.followup||'—'}</div></div>
+      <div class="detail-item"><div class="detail-label">Last Updated</div><div class="detail-val">${l.updatedAt||l.date}</div></div>
+    </div>
+    ${l.notes?`<div style="background:var(--bg);border-radius:8px;padding:.7rem .9rem;font-size:.82rem;color:var(--ink3);margin-bottom:.9rem">💬 ${l.notes}</div>`:''}
+
+    <div style="font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem">Update Stage</div>
+    <div class="stage-update-row">
+      ${['New Lead','Quotation Sent','Follow-up','Order Confirmed','Lost'].map(s=>`
+        <button class="su-btn ${l.stage===s?'current':''}" data-s="${s}" onclick="updateStage('${l.id}','${s}')">${STAGE_EMOJIS[s]||''} ${s}</button>`).join('')}
+    </div>
+
+    <div style="margin-top:1rem">
+      <div style="font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem">Update Follow-up Date</div>
+      <input type="date" id="modal-followup" value="${l.followup||''}" style="background:var(--bg);border:1.5px solid var(--border);border-radius:8px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.85rem;padding:.5rem .75rem;width:180px">
+    </div>
+
+    <div style="margin-top:.8rem">
+      <div style="font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.4rem">Add Note</div>
+      <textarea id="modal-note" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:.55rem .75rem;resize:none;height:52px" placeholder="Koi update ya note..."></textarea>
+    </div>
+
+    <div style="margin-top:1rem">
+      <div style="font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:.5rem">History</div>
+      <div style="display:flex;flex-direction:column;gap:.3rem;max-height:120px;overflow-y:auto">
+        ${(l.history||[]).slice().reverse().map(h=>`
+          <div style="display:flex;gap:.5rem;align-items:flex-start;font-size:.72rem;padding:.3rem 0;border-bottom:1px dashed var(--border)">
+            <span style="color:var(--muted);white-space:nowrap">${h.date}</span>
+            <span style="font-weight:600;color:var(--ink3)">${h.stage}</span>
+            ${h.note?`<span style="color:var(--muted)">— ${h.note}</span>`:''}
+          </div>`).join('')}
+      </div>
+    </div>`;
+
+  document.getElementById('modal-footer').innerHTML = `
+    <button onclick="deleteLead('${l.id}')" style="background:var(--red-l);color:var(--red);border:1px solid var(--red-m);border-radius:8px;padding:.55rem 1rem;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">🗑 Delete</button>
+    <button onclick="saveModalUpdate('${l.id}')" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:.55rem 1.2rem;font-size:.82rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 2px 8px rgba(26,79,214,.25)">💾 Save Update</button>`;
+
+  document.getElementById('modal').classList.add('open');
+}
+
+function updateStage(id, stage){
+  document.querySelectorAll('.su-btn').forEach(b=>b.classList.remove('current'));
+  document.querySelector(`.su-btn[data-s="${stage}"]`)?.classList.add('current');
+}
+
+function saveModalUpdate(id){
+  const leads = getLeads();
+  const i = leads.findIndex(l=>l.id===id);
+  if(i<0) return;
+
+  const newStage   = document.querySelector('.su-btn.current')?.dataset.s || leads[i].stage;
+  const newFollowup= document.getElementById('modal-followup').value;
+  const newNote    = document.getElementById('modal-note').value.trim();
+
+  leads[i].stage    = newStage;
+  leads[i].followup = newFollowup;
+  leads[i].updatedAt= td();
+  leads[i].history  = leads[i].history||[];
+  if(newNote || newStage!==SELECTED_LEAD.stage){
+    leads[i].history.push({ stage:newStage, date:td(), note:newNote||'Stage updated' });
+  }
+  if(newNote) leads[i].notes = newNote;
+
+  saveLeads(leads);
+  closeModal();
+  renderLeads(); updateStats();
+
+  // Sync update to Sheets
+  if(SCRIPT_URL){
+    syncToSheets('updateLead', {
+      id: id, stage: newStage, followup: newFollowup, notes: newNote
+    }).then(ok => toast(ok ? '✅ Updated & synced!' : '💾 Updated locally', ok?'ok':''));
+  } else {
+    toast('Lead updated!', 'ok');
+  }
+}
+
+function deleteLead(id){
+  if(!confirm('Delete this lead?')) return;
+  saveLeads(getLeads().filter(l=>l.id!==id));
+  closeModal(); renderLeads(); updateStats();
+  toast('Lead deleted');
+}
+
+function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+
+// ── SYNC TO SHEETS ──
+async function syncToSheets(action, payload) {
+  if(!SCRIPT_URL) return false;
+  try {
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({action, payload})
+    });
+    const d = await res.json();
+    return d.ok;
+  } catch {
+    try {
+      // JSONP fallback
+      const params = encodeURIComponent(JSON.stringify({action, payload}));
+      const res = await fetch(SCRIPT_URL + '?data=' + params);
+      const d = await res.json();
+      return d.ok;
+    } catch { return false; }
+  }
+}
+
+// ── INIT ──
+renderLeads();
+updateStats();
+</script>
+</body>
+</html>
