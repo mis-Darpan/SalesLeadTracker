@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Litpax — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ── DASHBOARD EXTRAS ── */
+.nav-tabs{display:flex;gap:.3rem;padding:0 1.4rem;background:var(--ink);border-top:1px solid rgba(255,255,255,.07);}
+.nav-tab{padding:.45rem 1rem;font-size:.72rem;font-weight:700;color:rgba(255,255,255,.45);cursor:pointer;border-bottom:2px solid transparent;font-family:'Syne',sans-serif;text-decoration:none;transition:all .15s;}
+.nav-tab:hover{color:rgba(255,255,255,.8);}
+.nav-tab.active{color:#fff;border-bottom-color:var(--blue);}
+
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-bottom:1.1rem;}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:.9rem 1.1rem;box-shadow:var(--sh);position:relative;overflow:hidden;}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.sc-blue::before{background:linear-gradient(90deg,var(--blue),var(--sky));}
+.sc-green::before{background:var(--green);}
+.sc-amber::before{background:var(--amber);}
+.sc-red::before{background:var(--red);}
+.sc-purple::before{background:var(--purple);}
+.sc-sky::before{background:var(--sky);}
+.stat-v{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;color:var(--ink);line-height:1;}
+.stat-l{font-size:.6rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:.25rem;}
+.stat-sub{font-size:.68rem;color:var(--muted);margin-top:.3rem;}
+
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1.1rem;}
+.chart-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem;margin-bottom:1.1rem;}
+.chart-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1rem 1.1rem;box-shadow:var(--sh);}
+.chart-title{font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;color:var(--ink);margin-bottom:.8rem;display:flex;align-items:center;justify-content:space-between;}
+.chart-sub{font-size:.62rem;color:var(--muted);font-weight:400;}
+.chart-wrap{position:relative;height:220px;}
+.chart-wrap-sm{position:relative;height:180px;}
+
+/* Funnel */
+.funnel{display:flex;flex-direction:column;gap:.4rem;padding:.2rem 0;}
+.funnel-row{display:flex;align-items:center;gap:.6rem;}
+.funnel-bar-wrap{flex:1;background:var(--bg2);border-radius:4px;height:28px;overflow:hidden;}
+.funnel-bar{height:100%;border-radius:4px;display:flex;align-items:center;padding:0 .6rem;font-size:.68rem;font-weight:700;color:#fff;transition:width .5s ease;white-space:nowrap;}
+.funnel-lbl{font-size:.68rem;color:var(--ink3);min-width:110px;font-weight:600;}
+.funnel-cnt{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);min-width:28px;text-align:right;}
+
+/* Assigned table */
+.asgn-table{width:100%;border-collapse:collapse;margin-top:.3rem;}
+.asgn-table th{font-size:.58rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:.35rem .5rem;border-bottom:1px solid var(--border);text-align:left;}
+.asgn-table td{font-size:.72rem;padding:.4rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);}
+.asgn-table tr:last-child td{border-bottom:none;}
+.asgn-table td:first-child{font-weight:700;color:var(--ink);font-family:'Syne',sans-serif;}
+.asgn-bar{display:inline-block;height:6px;border-radius:3px;background:var(--blue);vertical-align:middle;margin-left:.4rem;}
+
+/* Follow-up table */
+.fu-section{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1rem 1.1rem;box-shadow:var(--sh);margin-bottom:1.1rem;}
+.fu-list{display:flex;flex-direction:column;gap:.3rem;max-height:220px;overflow-y:auto;}
+.fu-item{display:grid;grid-template-columns:1fr 1.2fr .8fr .7fr;gap:.5rem;align-items:center;padding:.4rem .6rem;border-radius:7px;background:var(--bg);}
+.fu-item.overdue{background:var(--red-l);border:1px solid var(--red-m);}
+.fu-item.today{background:var(--amber-l);border:1px solid var(--amber-m);}
+.fu-item.upcoming{background:var(--green-l);border:1px solid var(--green-m);}
+.fu-name{font-size:.75rem;font-weight:700;color:var(--ink);}
+.fu-co{font-size:.62rem;color:var(--muted);}
+.fu-date{font-size:.68rem;font-weight:600;}
+.fu-stage{font-size:.6rem;}
+.fu-asgn{font-size:.65rem;color:var(--ink3);}
+
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem;}
+.section-hdr-title{font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;color:var(--ink);}
+.badge-count{background:var(--blue-l);color:var(--blue);font-size:.6rem;font-weight:700;padding:.15rem .45rem;border-radius:10px;font-family:'JetBrains Mono',monospace;}
+
+.refresh-btn{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:.3rem .7rem;font-size:.66rem;font-weight:700;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .13s;}
+.refresh-btn:hover{background:var(--blue-l);color:var(--blue);border-color:var(--blue-m);}
+
+.empty-dash{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">LITPAX</div>
+    <div class="login-title">Sales Lead Tracker</div>
+    <div class="login-sub">Apna password enter karo</div>
+    <div class="fld">
+      <label>Password</label>
+      <input type="password" id="login-password" placeholder="••••••••" onkeydown="loginKeydown(event)" autofocus>
+    </div>
+    <div class="login-error" id="login-error"></div>
+    <button id="login-btn" onclick="doLogin()">Login →</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" style="display:none">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="tb-badge">LITPAX</div>
+      <div>
+        <div class="tb-name">Sales Lead Tracker</div>
+        <div class="tb-sub">Pipeline Management</div>
+      </div>
+    </div>
+    <div class="tb-right">
+      <span class="tb-role" id="tb-role-badge">ADMIN</span>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- NAV TABS -->
+  <div class="nav-tabs">
+    <a class="nav-tab" href="index.html">📋 Leads</a>
+    <a class="nav-tab active" href="dashboard.html">📊 Dashboard</a>
+  </div>
+
+  <!-- PAGE -->
+  <div class="page">
+
+    <!-- TOP STAT CARDS -->
+    <div class="dash-grid">
+      <div class="stat-card sc-blue">
+        <div class="stat-v" id="d-total">0</div>
+        <div class="stat-l">Total Leads</div>
+        <div class="stat-sub" id="d-total-sub">—</div>
+      </div>
+      <div class="stat-card sc-green">
+        <div class="stat-v" id="d-won">0</div>
+        <div class="stat-l">Won (Order Confirmed)</div>
+        <div class="stat-sub" id="d-rate">Conv. Rate: 0%</div>
+      </div>
+      <div class="stat-card sc-amber">
+        <div class="stat-v" id="d-due">0</div>
+        <div class="stat-l">Follow-up Aaj</div>
+        <div class="stat-sub" id="d-overdue-txt">0 overdue</div>
+      </div>
+      <div class="stat-card sc-red">
+        <div class="stat-v" id="d-lost">0</div>
+        <div class="stat-l">Lost Leads</div>
+        <div class="stat-sub" id="d-lost-rate">Lost Rate: 0%</div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW 1: Stage Pie + Monthly Bar -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Stage-wise Distribution <span class="chart-sub">Abhi ka status</span></div>
+        <div class="chart-wrap"><canvas id="chart-stage"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Monthly Lead Trend <span class="chart-sub">Last 6 months</span></div>
+        <div class="chart-wrap"><canvas id="chart-monthly"></canvas></div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW 2: Funnel + Assigned + Source -->
+    <div class="chart-row-3">
+      <div class="chart-card">
+        <div class="chart-title">Conversion Funnel</div>
+        <div class="funnel" id="funnel-chart"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Assigned Person Wise</div>
+        <table class="asgn-table" id="asgn-table">
+          <thead><tr><th>Person</th><th>Leads</th><th>Won</th><th>Rate</th></tr></thead>
+          <tbody id="asgn-body"></tbody>
+        </table>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Lead Source Breakdown <span class="chart-sub"></span></div>
+        <div class="chart-wrap-sm"><canvas id="chart-source"></canvas></div>
+      </div>
+    </div>
+
+    <!-- APPLICATION TYPE -->
+    <div class="charts-row" style="margin-bottom:1.1rem">
+      <div class="chart-card">
+        <div class="chart-title">Application Type Wise <span class="chart-sub">Kaunsa segment zyada</span></div>
+        <div class="chart-wrap"><canvas id="chart-app"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Budget Range Distribution <span class="chart-sub"></span></div>
+        <div class="chart-wrap"><canvas id="chart-budget"></canvas></div>
+      </div>
+    </div>
+
+    <!-- FOLLOW-UP SECTION -->
+    <div class="fu-section">
+      <div class="section-hdr">
+        <div class="section-hdr-title">📞 Follow-up Summary</div>
+        <button class="refresh-btn" onclick="loadDashboard()">🔄 Refresh</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.7rem">
+
+        <div>
+          <div style="font-size:.62rem;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem">⚠️ Overdue <span class="badge-count" id="cnt-overdue">0</span></div>
+          <div class="fu-list" id="fu-overdue"></div>
+        </div>
+
+        <div>
+          <div style="font-size:.62rem;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem">📞 Aaj <span class="badge-count" id="cnt-today">0</span></div>
+          <div class="fu-list" id="fu-today"></div>
+        </div>
+
+        <div>
+          <div style="font-size:.62rem;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem">📅 Upcoming (7 days) <span class="badge-count" id="cnt-upcoming">0</span></div>
+          <div class="fu-list" id="fu-upcoming"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzHRH4whSlic0Oe2Gc4AQAPjBC5T9oa6_PkBPzEPx-kud-Dl-YR_6AoXUNIFslYBOU/exec';
+const ROLES = { admin: { password: 'litpax@admin', label: 'Admin' } };
+
+let ALL_LEADS = [];
+let charts = {};
+
+// ── AUTH ──
+function getSession() { try { return JSON.parse(sessionStorage.getItem('ltx_session') || 'null'); } catch { return null; } }
+function setSession(role) { sessionStorage.setItem('ltx_session', JSON.stringify({ role, time: Date.now() })); }
+function logout() { sessionStorage.removeItem('ltx_session'); showLogin(); }
+function showLogin() { document.getElementById('app').style.display = 'none'; document.getElementById('login-screen').style.display = 'flex'; document.getElementById('login-error').textContent = ''; document.getElementById('login-password').value = ''; }
+function showApp() { document.getElementById('login-screen').style.display = 'none'; document.getElementById('app').style.display = 'block'; document.getElementById('tb-role-badge').textContent = (getSession()?.role || 'admin').toUpperCase(); loadDashboard(); }
+function doLogin() {
+  const pass = document.getElementById('login-password').value.trim();
+  let matched = null;
+  for (const [role, cfg] of Object.entries(ROLES)) { if (cfg.password === pass) { matched = role; break; } }
+  if (!matched) { document.getElementById('login-error').textContent = '❌ Galat password'; return; }
+  const btn = document.getElementById('login-btn'); btn.textContent = '⏳...'; btn.disabled = true;
+  setSession(matched);
+  setTimeout(() => { btn.textContent = 'Login →'; btn.disabled = false; showApp(); }, 400);
+}
+function loginKeydown(e) { if (e.key === 'Enter') doLogin(); }
+function toast(msg, type = '') { const t = document.getElementById('toast'); t.textContent = msg; t.className = 'toast show' + (type ? ' ' + type : ''); setTimeout(() => t.classList.remove('show'), 2600); }
+function td() { return new Date().toISOString().slice(0, 10); }
+
+// ── LOAD ──
+async function loadDashboard() {
+  try {
+    const r = await fetch(SCRIPT_URL + '?action=getLeads&stage=All');
+    const d = await r.json();
+    ALL_LEADS = d.ok ? d.leads : [];
+    renderDashboard();
+  } catch { toast('❌ Sheet se connect nahi hua', 'err'); }
+}
+
+// ── RENDER ──
+function renderDashboard() {
+  const leads = ALL_LEADS;
+  const today = td();
+  const c = s => leads.filter(l => l.stage === s).length;
+  const total = leads.length;
+  const won   = c('Order Confirmed');
+  const lost  = c('Lost');
+
+  // Stat cards
+  document.getElementById('d-total').textContent     = total;
+  document.getElementById('d-total-sub').textContent = total ? `${c('New Lead')} new · ${c('Follow-up')} follow-up` : '—';
+  document.getElementById('d-won').textContent       = won;
+  document.getElementById('d-rate').textContent      = 'Conv. Rate: ' + (total ? Math.round(won / total * 100) : 0) + '%';
+  document.getElementById('d-lost').textContent      = lost;
+  document.getElementById('d-lost-rate').textContent = 'Lost Rate: ' + (total ? Math.round(lost / total * 100) : 0) + '%';
+
+  const overdue  = leads.filter(l => l.followup && l.followup < today && l.stage !== 'Order Confirmed' && l.stage !== 'Lost');
+  const dueToday = leads.filter(l => l.followup === today);
+  document.getElementById('d-due').textContent          = dueToday.length;
+  document.getElementById('d-overdue-txt').textContent  = overdue.length + ' overdue';
+
+  // Charts
+  renderStageChart(leads, c);
+  renderMonthlyChart(leads);
+  renderFunnel(leads, c, total);
+  renderAssigned(leads);
+  renderSourceChart(leads);
+  renderAppChart(leads);
+  renderBudgetChart(leads);
+  renderFollowups(leads, today, overdue, dueToday);
+}
+
+function destroyChart(id) { if (charts[id]) { charts[id].destroy(); delete charts[id]; } }
+
+function renderStageChart(leads, c) {
+  destroyChart('stage');
+  const ctx = document.getElementById('chart-stage').getContext('2d');
+  charts['stage'] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['New Lead','Quotation Sent','Follow-up','Order Confirmed','Lost'],
+      datasets: [{ data: ['New Lead','Quotation Sent','Follow-up','Order Confirmed','Lost'].map(s => c(s)), backgroundColor: ['#0891c2','#6d3be8','#c97a00','#0d9e6e','#d43b3b'], borderWidth: 2, borderColor: '#fff' }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { font: { family: 'DM Sans', size: 11 }, boxWidth: 12, padding: 10 } } }, cutout: '60%' }
+  });
+}
+
+function renderMonthlyChart(leads) {
+  destroyChart('monthly');
+  const months = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(); d.setMonth(d.getMonth() - i);
+    months.push({ key: d.toISOString().slice(0, 7), label: d.toLocaleString('default', { month: 'short', year: '2-digit' }) });
+  }
+  const counts = months.map(m => leads.filter(l => (l.date || '').startsWith(m.key)).length);
+  const won    = months.map(m => leads.filter(l => (l.date || '').startsWith(m.key) && l.stage === 'Order Confirmed').length);
+  const ctx = document.getElementById('chart-monthly').getContext('2d');
+  charts['monthly'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: months.map(m => m.label),
+      datasets: [
+        { label: 'Total Leads', data: counts, backgroundColor: '#c2d2f8', borderRadius: 5 },
+        { label: 'Won', data: won, backgroundColor: '#0d9e6e', borderRadius: 5 }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { font: { family: 'DM Sans', size: 11 }, boxWidth: 12 } } }, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+  });
+}
+
+function renderFunnel(leads, c, total) {
+  const stages = [
+    { label: 'New Lead',        color: '#0891c2' },
+    { label: 'Quotation Sent',  color: '#6d3be8' },
+    { label: 'Follow-up',       color: '#c97a00' },
+    { label: 'Order Confirmed', color: '#0d9e6e' },
+    { label: 'Lost',            color: '#d43b3b' },
+  ];
+  const max = total || 1;
+  document.getElementById('funnel-chart').innerHTML = stages.map(s => {
+    const cnt = c(s.label);
+    const pct = Math.round(cnt / max * 100);
+    return `<div class="funnel-row">
+      <div class="funnel-lbl">${s.label}</div>
+      <div class="funnel-bar-wrap">
+        <div class="funnel-bar" style="width:${Math.max(pct,2)}%;background:${s.color}">${pct > 8 ? pct+'%' : ''}</div>
+      </div>
+      <div class="funnel-cnt">${cnt}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderAssigned(leads) {
+  const persons = [...new Set(leads.map(l => l.assigned || 'Unassigned'))];
+  const max = Math.max(...persons.map(p => leads.filter(l => (l.assigned || 'Unassigned') === p).length), 1);
+  document.getElementById('asgn-body').innerHTML = persons.map(p => {
+    const pLeads = leads.filter(l => (l.assigned || 'Unassigned') === p);
+    const pWon   = pLeads.filter(l => l.stage === 'Order Confirmed').length;
+    const rate   = pLeads.length ? Math.round(pWon / pLeads.length * 100) : 0;
+    const barW   = Math.round(pLeads.length / max * 80);
+    return `<tr>
+      <td>${p}</td>
+      <td>${pLeads.length}<span class="asgn-bar" style="width:${barW}px"></span></td>
+      <td style="color:var(--green);font-weight:700">${pWon}</td>
+      <td>${rate}%</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="4" style="color:var(--muted);font-size:.7rem;text-align:center;padding:.6rem">Koi data nahi</td></tr>';
+}
+
+function renderSourceChart(leads) {
+  destroyChart('source');
+  const sources = {};
+  leads.forEach(l => { const s = l.source || 'Unknown'; sources[s] = (sources[s] || 0) + 1; });
+  const labels = Object.keys(sources); const data = Object.values(sources);
+  const colors = ['#1a4fd6','#0891c2','#6d3be8','#c97a00','#0d9e6e','#d43b3b','#3d4f6e','#b0bdd4'];
+  const ctx = document.getElementById('chart-source').getContext('2d');
+  charts['source'] = new Chart(ctx, {
+    type: 'pie',
+    data: { labels, datasets: [{ data, backgroundColor: colors.slice(0, labels.length), borderWidth: 2, borderColor: '#fff' }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { family: 'DM Sans', size: 10 }, boxWidth: 10, padding: 6 } } } }
+  });
+}
+
+function renderAppChart(leads) {
+  destroyChart('app');
+  const apps = {};
+  leads.forEach(l => { const a = l.oem || 'Unknown'; apps[a] = (apps[a] || 0) + 1; });
+  const labels = Object.keys(apps); const data = Object.values(apps);
+  const colors = ['#0891c2','#6d3be8','#c97a00','#0d9e6e','#d43b3b','#1a4fd6','#3d4f6e'];
+  const ctx = document.getElementById('chart-app').getContext('2d');
+  charts['app'] = new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets: [{ label: 'Leads', data, backgroundColor: colors.slice(0, labels.length), borderRadius: 6 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 10 } } }, y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+  });
+}
+
+function renderBudgetChart(leads) {
+  destroyChart('budget');
+  const budgets = {};
+  leads.forEach(l => { const b = l.amount || 'Not specified'; budgets[b] = (budgets[b] || 0) + 1; });
+  const order = ['Under 5000','5000-10000','10000-25000','25000-50000','50000-100000','Above 100000','Not specified'];
+  const labels = order.filter(k => budgets[k]);
+  const data   = labels.map(k => budgets[k]);
+  const colors = ['#c2d2f8','#a7edd8','#fde5a3','#d3bef8','#f8c4c4','#0d9e6e','#b0bdd4'];
+  const ctx = document.getElementById('chart-budget').getContext('2d');
+  charts['budget'] = new Chart(ctx, {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data, backgroundColor: colors.slice(0, labels.length), borderWidth: 2, borderColor: '#fff' }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { font: { family: 'DM Sans', size: 10 }, boxWidth: 10, padding: 8 } } }, cutout: '55%' }
+  });
+}
+
+function renderFollowups(leads, today, overdue, dueToday) {
+  const next7 = new Date(); next7.setDate(next7.getDate() + 7);
+  const next7str = next7.toISOString().slice(0, 10);
+  const upcoming = leads.filter(l => l.followup && l.followup > today && l.followup <= next7str);
+
+  document.getElementById('cnt-overdue').textContent  = overdue.length;
+  document.getElementById('cnt-today').textContent    = dueToday.length;
+  document.getElementById('cnt-upcoming').textContent = upcoming.length;
+
+  const fuCard = (l, cls) => `<div class="fu-item ${cls}">
+    <div><div class="fu-name">${l.name}</div><div class="fu-co">${l.company || '—'}</div></div>
+    <div class="fu-stage"><span class="badge" style="${{New Lead:'background:#e0f5fd;color:#0891c2',  'Quotation Sent':'background:#f3effe;color:#6d3be8','Follow-up':'background:#fff8eb;color:#c97a00','Order Confirmed':'background:#edfaf5;color:#0d9e6e','Lost':'background:#fff0f0;color:#d43b3b'}[l.stage]||''}">${l.stage}</span></div>
+    <div class="fu-date">${l.followup}</div>
+    <div class="fu-asgn">${l.assigned || '—'}</div>
+  </div>`;
+
+  const empty = '<div class="empty-dash">Koi nahi 🎉</div>';
+  document.getElementById('fu-overdue').innerHTML  = overdue.length  ? overdue.map(l  => fuCard(l, 'overdue')).join('')  : empty;
+  document.getElementById('fu-today').innerHTML    = dueToday.length ? dueToday.map(l => fuCard(l, 'today')).join('')    : empty;
+  document.getElementById('fu-upcoming').innerHTML = upcoming.length ? upcoming.map(l => fuCard(l, 'upcoming')).join('') : empty;
+}
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', () => {
+  const session = getSession();
+  if (session) showApp(); else showLogin();
+});
+</script>
+</body>
+</html>
