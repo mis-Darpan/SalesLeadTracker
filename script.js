@@ -1,4 +1,9 @@
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyV0Y8xU1KjqOjjCbhm93u8m-zau60rOYEiHARB8oq1GBeUT9kaoLlEWUwCkX-Oqo16/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzHRH4whSlic0Oe2Gc4AQAPjBC5T9oa6_PkBPzEPx-kud-Dl-YR_6AoXUNIFslYBOU/exec';
+
+// ── ROLES CONFIG ──
+const ROLES = {
+  admin: { password: 'litpax@admin', label: 'Admin', fullAccess: true }
+};
 
 const MAIN_STAGES = ['New Lead', 'Quotation Sent', 'Follow-up', 'Order Confirmed'];
 const NEXT_STAGE  = { 'New Lead': 'Quotation Sent', 'Quotation Sent': 'Follow-up', 'Follow-up': 'Order Confirmed' };
@@ -19,13 +24,57 @@ const GS_HEADERS = [
 ];
 
 let FILTER = 'All', SORT = 'date';
+let ALL_LEADS = []; // in-memory only, no localStorage
 
-// ── STORAGE ──
-function getLeads() {
-  try { return JSON.parse(localStorage.getItem('litpax_v2') || '[]'); } catch { return []; }
+// ── AUTH ──
+function getSession() {
+  try { return JSON.parse(sessionStorage.getItem('ltx_session') || 'null'); } catch { return null; }
 }
-function saveLeads(l) { localStorage.setItem('litpax_v2', JSON.stringify(l)); }
-function td() { return new Date().toISOString().slice(0, 10); }
+function setSession(role) {
+  sessionStorage.setItem('ltx_session', JSON.stringify({ role, time: Date.now() }));
+}
+function logout() {
+  sessionStorage.removeItem('ltx_session');
+  showLogin();
+}
+
+function showLogin() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-error').textContent = '';
+  document.getElementById('login-password').value = '';
+}
+
+function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  const session = getSession();
+  document.getElementById('tb-role-badge').textContent = session?.role?.toUpperCase() || 'ADMIN';
+  fetchLeads();
+}
+
+function doLogin() {
+  const pass = document.getElementById('login-password').value.trim();
+  const btn  = document.getElementById('login-btn');
+  let matched = null;
+  for (const [role, cfg] of Object.entries(ROLES)) {
+    if (cfg.password === pass) { matched = role; break; }
+  }
+  if (!matched) {
+    document.getElementById('login-error').textContent = '❌ Galat password — dobara try karo';
+    document.getElementById('login-password').focus();
+    return;
+  }
+  btn.textContent = '⏳ Logging in...'; btn.disabled = true;
+  setSession(matched);
+  setTimeout(() => {
+    btn.textContent = 'Login →'; btn.disabled = false;
+    showApp();
+  }, 400);
+}
+
+// Enter key on password field
+function loginKeydown(e) { if (e.key === 'Enter') doLogin(); }
 
 // ── TOAST ──
 function toast(msg, type = '') {
@@ -33,6 +82,32 @@ function toast(msg, type = '') {
   t.textContent = msg;
   t.className = 'toast show' + (type ? ' ' + type : '');
   setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+function td() { return new Date().toISOString().slice(0, 10); }
+
+// ── FETCH FROM SHEET (real-time) ──
+async function fetchLeads() {
+  document.getElementById('lt-body').innerHTML = `<div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-title">Sheet se data load ho raha hai...</div></div>`;
+  try {
+    const r = await fetch(SCRIPT_URL + '?action=getLeads&stage=All');
+    const d = await r.json();
+    if (d.ok && d.leads) {
+      ALL_LEADS = d.leads;
+      renderTable();
+      updateStats();
+    } else {
+      ALL_LEADS = [];
+      renderTable();
+      updateStats();
+      toast('Sheet mein koi data nahi mila', 'err');
+    }
+  } catch (e) {
+    ALL_LEADS = [];
+    renderTable();
+    updateStats();
+    toast('❌ Sheet se connect nahi hua — Script check karo', 'err');
+  }
 }
 
 // ── FORM ──
@@ -75,17 +150,16 @@ function addLead() {
     updatedAt: td()
   };
 
-  const leads = getLeads(); leads.unshift(lead); saveLeads(leads);
-  renderTable(); updateStats();
-
-  if (SCRIPT_URL) {
-    syncToSheets('addLead', lead).then(ok => toast(ok ? '✅ Added & synced!' : '💾 Saved locally', ok ? 'ok' : ''));
-  } else {
-    toast('✅ Lead added — ' + name, 'ok');
-  }
-
-  resetForm(); closeAddModal();
-  btn.disabled = false; btn.textContent = '⚡ Add to Pipeline';
+  syncToSheets('addLead', lead).then(ok => {
+    if (ok) {
+      toast('✅ Lead added & synced!', 'ok');
+      fetchLeads(); // refresh from sheet
+    } else {
+      toast('❌ Sheet sync nahi hua — check karo', 'err');
+    }
+    resetForm(); closeAddModal();
+    btn.disabled = false; btn.textContent = '⚡ Add to Pipeline';
+  });
 }
 
 function resetForm() {
@@ -122,34 +196,9 @@ function fuHtml(followup) {
   return `<span class="fu-ok">📅 ${followup}</span>`;
 }
 
-// ── LOAD FROM SHEETS ──
-async function loadFromSheets() {
-  const btn = document.getElementById('sync-btn');
-  btn.textContent = '⏳ Loading...'; btn.disabled = true;
-  try {
-    const r = await fetch(SCRIPT_URL + '?action=getLeads&stage=All');
-    const d = await r.json();
-    if (d.ok && d.leads && d.leads.length) {
-      const local = getLeads();
-      const merged = d.leads.map(sl => {
-        const loc = local.find(l => l.id === sl.id);
-        return { ...sl, history: loc?.history || [{ stage: sl.stage, date: sl.date, note: 'Loaded from Sheet' }] };
-      });
-      saveLeads(merged);
-      renderTable(); updateStats();
-      toast('✅ ' + merged.length + ' leads Sheet se load ho gaye!', 'ok');
-    } else {
-      toast('Sheet mein koi data nahi mila', 'err');
-    }
-  } catch (e) {
-    toast('❌ Sheet se load nahi hua — Script check karo', 'err');
-  }
-  btn.textContent = '☁️ Sheet se Load'; btn.disabled = false;
-}
-
 // ── RENDER TABLE ──
 function renderTable() {
-  let leads = getLeads();
+  let leads = [...ALL_LEADS];
   const q = (document.getElementById('search-inp')?.value || '').toLowerCase();
   leads = leads.filter(l => {
     const mf = FILTER === 'All' || l.stage === FILTER;
@@ -157,7 +206,7 @@ function renderTable() {
     return mf && ms;
   });
 
-  if (SORT === 'name')     leads.sort((a, b) => a.name.localeCompare(b.name));
+  if (SORT === 'name')          leads.sort((a, b) => a.name.localeCompare(b.name));
   else if (SORT === 'followup') leads.sort((a, b) => (a.followup || '9999') > (b.followup || '9999') ? 1 : -1);
   else if (SORT === 'stage')    leads.sort((a, b) => MAIN_STAGES.indexOf(a.stage) - MAIN_STAGES.indexOf(b.stage));
   else leads.sort((a, b) => b.id > a.id ? 1 : -1);
@@ -192,20 +241,15 @@ function renderTable() {
 
 // ── QUICK STAGE ──
 function quickStage(id, stage) {
-  const leads = getLeads();
-  const i = leads.findIndex(l => l.id === id);
-  if (i < 0) return;
-  const prev = leads[i].stage;
-  leads[i].stage = stage; leads[i].updatedAt = td();
-  leads[i].history = leads[i].history || [];
-  leads[i].history.push({ stage, date: td(), note: prev + ' → ' + stage });
-  saveLeads(leads); renderTable(); updateStats();
-  toast(S_EMOJI[stage] + ' ' + stage, 'ok');
+  syncToSheets('updateLead', { id, stage, followup: '', notes: '' }).then(ok => {
+    if (ok) { toast(S_EMOJI[stage] + ' ' + stage, 'ok'); fetchLeads(); }
+    else toast('❌ Update nahi hua', 'err');
+  });
 }
 
 // ── STATS ──
 function updateStats() {
-  const leads = getLeads();
+  const leads = ALL_LEADS;
   const c = s => leads.filter(l => l.stage === s).length;
   document.getElementById('k-total').textContent = leads.length;
   document.getElementById('k-new').textContent   = c('New Lead');
@@ -262,8 +306,7 @@ function buildSheetRow(l) {
 
 // ── DETAIL MODAL ──
 function openDetail(id) {
-  const leads = getLeads();
-  const l = leads.find(x => x.id === id);
+  const l = ALL_LEADS.find(x => x.id === id);
   if (!l) return;
   const sc  = S_COLOR[l.stage] || S_COLOR['New Lead'];
   const ROW = buildSheetRow(l);
@@ -354,29 +397,23 @@ function setDetailStage(s) {
 }
 
 function saveDetail(id) {
-  const leads = getLeads();
-  const i = leads.findIndex(l => l.id === id);
-  if (i < 0) return;
-  const ns   = document.querySelector('.sb2.cur')?.dataset.s || leads[i].stage;
+  const l = ALL_LEADS.find(x => x.id === id);
+  if (!l) return;
+  const ns   = document.querySelector('.sb2.cur')?.dataset.s || l.stage;
   const nf   = document.getElementById('d-followup').value;
   const note = document.getElementById('d-note').value.trim();
-  const prev = leads[i].stage;
-  leads[i].stage = ns; leads[i].followup = nf; leads[i].updatedAt = td();
-  leads[i].history = leads[i].history || [];
-  if (note || ns !== prev) leads[i].history.push({ stage: ns, date: td(), note: note || (prev !== ns ? prev + ' → ' + ns : 'Updated') });
-  if (note) leads[i].notes = note;
-  saveLeads(leads); closeDetail(); renderTable(); updateStats();
-  if (SCRIPT_URL) {
-    syncToSheets('updateLead', { id, stage: ns, followup: nf, notes: note }).then(ok => toast(ok ? '✅ Updated & synced!' : '💾 Updated locally', ok ? 'ok' : ''));
-  } else {
-    toast('✅ Updated!', 'ok');
-  }
+  syncToSheets('updateLead', { id, stage: ns, followup: nf, notes: note }).then(ok => {
+    if (ok) { toast('✅ Updated & synced!', 'ok'); closeDetail(); fetchLeads(); }
+    else toast('❌ Update nahi hua', 'err');
+  });
 }
 
 function deleteLead(id) {
   if (!confirm('Delete karna hai?')) return;
-  saveLeads(getLeads().filter(l => l.id !== id));
-  closeDetail(); renderTable(); updateStats(); toast('Lead deleted');
+  syncToSheets('deleteLead', { id }).then(ok => {
+    if (ok) { toast('Lead deleted', 'ok'); closeDetail(); fetchLeads(); }
+    else toast('❌ Delete nahi hua', 'err');
+  });
 }
 
 function closeDetail() { document.getElementById('modal-detail').classList.remove('open'); }
@@ -408,5 +445,8 @@ async function syncToSheets(action, payload) {
 }
 
 // ── INIT ──
-renderTable();
-updateStats();
+window.addEventListener('DOMContentLoaded', () => {
+  const session = getSession();
+  if (session) { showApp(); }
+  else { showLogin(); }
+});
