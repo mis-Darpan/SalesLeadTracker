@@ -223,3 +223,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 .tb-role{background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.4px;}
 .btn-logout{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:.28rem .65rem;font-size:.65rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .13s;}
 .btn-logout:hover{background:rgba(255,255,255,.15);color:#fff;}
+
+/* ── NAV TABS ── */
+.nav-tabs{display:flex;gap:.3rem;padding:0 1.4rem;background:var(--ink);border-top:1px solid rgba(255,255,255,.07);}
+.nav-tab{padding:.45rem 1rem;font-size:.72rem;font-weight:700;color:rgba(255,255,255,.45);cursor:pointer;border-bottom:2px solid transparent;font-family:'Syne',sans-serif;text-decoration:none;transition:all .15s;}
+.nav-tab:hover{color:rgba(255,255,255,.8);}
+.nav-tab.active{color:#fff;border-bottom-color:var(--blue);}
