@@ -415,9 +415,10 @@ function renderFollowups(leads, today, overdue, dueToday) {
   document.getElementById('cnt-today').textContent    = dueToday.length;
   document.getElementById('cnt-upcoming').textContent = upcoming.length;
 
+  const stageBadgeStyle = {'New Lead':'background:#e0f5fd;color:#0891c2','Quotation Sent':'background:#f3effe;color:#6d3be8','Follow-up':'background:#fff8eb;color:#c97a00','Order Confirmed':'background:#edfaf5;color:#0d9e6e','Lost':'background:#fff0f0;color:#d43b3b'};
   const fuCard = (l, cls) => `<div class="fu-item ${cls}">
     <div><div class="fu-name">${l.name}</div><div class="fu-co">${l.company || '—'}</div></div>
-    <div class="fu-stage"><span class="badge" style="${{New Lead:'background:#e0f5fd;color:#0891c2',  'Quotation Sent':'background:#f3effe;color:#6d3be8','Follow-up':'background:#fff8eb;color:#c97a00','Order Confirmed':'background:#edfaf5;color:#0d9e6e','Lost':'background:#fff0f0;color:#d43b3b'}[l.stage]||''}">${l.stage}</span></div>
+    <div class="fu-stage"><span class="badge" style="${stageBadgeStyle[l.stage]||''}">${l.stage}</span></div>
     <div class="fu-date">${l.followup}</div>
     <div class="fu-asgn">${l.assigned || '—'}</div>
   </div>`;
