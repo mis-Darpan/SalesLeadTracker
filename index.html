@@ -9,195 +9,217 @@
 </head>
 <body>
 
-<!-- TOPBAR -->
-<div class="topbar">
-  <div class="tb-left">
-    <div class="tb-badge">LITPAX</div>
-    <div>
-      <div class="tb-name">Sales Lead Tracker</div>
-      <div class="tb-sub">Pipeline Management</div>
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">LITPAX</div>
+    <div class="login-title">Sales Lead Tracker</div>
+    <div class="login-sub">Apna password enter karo</div>
+    <div class="fld">
+      <label>Password</label>
+      <input type="password" id="login-password" placeholder="••••••••" onkeydown="loginKeydown(event)" autofocus>
     </div>
-  </div>
-  <div class="tb-right">
-    <div class="tb-k"><div class="tb-k-v" id="t-total">0</div><div class="tb-k-l">Total</div></div>
-    <div class="tb-sep"></div>
-    <div class="tb-k"><div class="tb-k-v" id="t-won">0</div><div class="tb-k-l">Won</div></div>
-    <div class="tb-sep"></div>
-    <div class="tb-k"><div class="tb-k-v" id="t-rate">0%</div><div class="tb-k-l">Conv. Rate</div></div>
-    <div class="tb-sep"></div>
-    <div class="tb-k"><div class="tb-k-v" id="t-due" style="color:#fde5a3">0</div><div class="tb-k-l">Due Today</div></div>
-    <div class="tb-sep"></div>
-    <button class="btn-new-lead" onclick="openAddModal()">+ New Lead</button>
+    <div class="login-error" id="login-error"></div>
+    <button id="login-btn" onclick="doLogin()">Login →</button>
   </div>
 </div>
 
-<!-- PAGE -->
-<div class="page">
+<!-- MAIN APP -->
+<div id="app" style="display:none">
 
-  <!-- KPI Cards -->
-  <div class="kpi-row">
-    <div class="kpi kpi-all active-kpi" id="kpi-all"  onclick="setFilter('All',this)">          <div class="kpi-v" id="k-total">0</div><div class="kpi-l">All Leads</div></div>
-    <div class="kpi kpi-new"            id="kpi-new"  onclick="setFilter('New Lead',this)">     <div class="kpi-v" id="k-new">0</div>  <div class="kpi-l">New Lead</div></div>
-    <div class="kpi kpi-quot"           id="kpi-quot" onclick="setFilter('Quotation Sent',this)"><div class="kpi-v" id="k-quot">0</div><div class="kpi-l">Quotation</div></div>
-    <div class="kpi kpi-fol"            id="kpi-fol"  onclick="setFilter('Follow-up',this)">    <div class="kpi-v" id="k-fol">0</div>  <div class="kpi-l">Follow-up</div></div>
-    <div class="kpi kpi-won"            id="kpi-won"  onclick="setFilter('Order Confirmed',this)"><div class="kpi-v" id="k-won">0</div><div class="kpi-l">Won</div></div>
-    <div class="kpi kpi-lost"           id="kpi-lost" onclick="setFilter('Lost',this)">         <div class="kpi-v" id="k-lost">0</div> <div class="kpi-l">Lost</div></div>
-  </div>
-
-  <!-- Pipeline Bar -->
-  <div class="pipe-bar" id="pipe-bar"></div>
-
-  <!-- Toolbar -->
-  <div class="toolbar">
-    <input class="fsearch" type="text" id="search-inp" placeholder="🔍 Name, company, phone search karo..." oninput="renderTable()">
-    <button class="btn-sync" id="sync-btn" onclick="loadFromSheets()">☁️ Sheet se Load</button>
-    <span class="sort-lbl">Sort:</span>
-    <button class="sort-btn on" onclick="setSort('date',this)">Latest</button>
-    <button class="sort-btn"   onclick="setSort('name',this)">Name</button>
-    <button class="sort-btn"   onclick="setSort('followup',this)">Follow-up</button>
-    <button class="sort-btn"   onclick="setSort('stage',this)">Stage</button>
-  </div>
-
-  <!-- Lead Table -->
-  <div class="lead-table">
-    <div class="lt-head">
-      <div class="lt-h">Customer</div>
-      <div class="lt-h">Application</div>
-      <div class="lt-h">Stage</div>
-      <div class="lt-h">Follow-up</div>
-      <div class="lt-h">Assigned</div>
-      <div class="lt-h">Actions</div>
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="tb-badge">LITPAX</div>
+      <div>
+        <div class="tb-name">Sales Lead Tracker</div>
+        <div class="tb-sub">Pipeline Management</div>
+      </div>
     </div>
-    <div class="lt-body" id="lt-body"></div>
-  </div>
-</div>
-
-<!-- DETAIL MODAL -->
-<div class="moverlay" id="modal-detail" onclick="if(event.target===this)closeDetail()">
-  <div class="modal-detail">
-    <div class="mhead">
-      <div class="mtitle" id="detail-title">Lead Details</div>
-      <button class="mclose" onclick="closeDetail()">✕</button>
-    </div>
-    <div class="mbody" id="detail-body"></div>
-    <div class="mfooter" id="detail-footer"></div>
-  </div>
-</div>
-
-<!-- ADD LEAD MODAL -->
-<div class="moverlay" id="modal-add" onclick="if(event.target===this)closeAddModal()">
-  <div class="modal-add">
-    <div class="mhead">
-      <div class="mtitle">+ Add New Lead</div>
-      <button class="mclose" onclick="closeAddModal()">✕</button>
-    </div>
-    <div class="mbody">
-
-      <div class="form-sec-title">Customer Info</div>
-      <div class="fld"><label>Customer Name <span class="req">*</span></label><input type="text" id="f-name" placeholder="Full name" autocomplete="off"></div>
-      <div class="frow">
-        <div class="fld"><label>Phone <span class="req">*</span></label><input type="tel" id="f-phone" placeholder="Mobile"></div>
-        <div class="fld"><label>Email</label><input type="email" id="f-email" placeholder="email@..."></div>
-      </div>
-      <div class="frow">
-        <div class="fld"><label>Company / Dealer</label><input type="text" id="f-company" placeholder="Company name"></div>
-        <div class="fld"><label>City</label><input type="text" id="f-city" placeholder="City"></div>
-      </div>
-      <div class="fld"><label>State</label><input type="text" id="f-state" placeholder="State"></div>
-
-      <div class="form-sec-title">Battery Requirement</div>
-      <div class="fld"><label>Application Type <span class="req">*</span></label>
-        <select id="f-oem">
-          <option value="">-- Select Application --</option>
-          <option>2 Wheeler (Electric Bike/Scooter)</option>
-          <option>3 Wheeler (E-Rickshaw/Auto)</option>
-          <option>Solar (Home/Commercial)</option>
-          <option>Inverter / Home UPS</option>
-          <option>Cycle (E-Cycle)</option>
-          <option>Other</option>
-        </select>
-      </div>
-      <div class="f3">
-        <div class="fld"><label>Voltage</label>
-          <select id="f-voltage">
-            <option value="">-- V --</option>
-            <option>12V</option><option>24V</option><option>36V</option>
-            <option>48V</option><option>60V</option><option>72V</option><option>96V</option><option>Custom</option>
-          </select>
-        </div>
-        <div class="fld"><label>Capacity</label>
-          <select id="f-capacity">
-            <option value="">-- Ah --</option>
-            <option>20Ah</option><option>30Ah</option><option>40Ah</option>
-            <option>50Ah</option><option>60Ah</option><option>75Ah</option>
-            <option>100Ah</option><option>150Ah</option><option>200Ah</option><option>Custom</option>
-          </select>
-        </div>
-        <div class="fld"><label>Qty</label><input type="number" id="f-fleet" placeholder="No." min="1"></div>
-      </div>
-      <div class="frow">
-        <div class="fld"><label>Budget (₹)</label>
-          <select id="f-amount">
-            <option value="">-- Select --</option>
-            <option value="Under 5000">Under ₹5K</option>
-            <option value="5000-10000">₹5K–₹10K</option>
-            <option value="10000-25000">₹10K–₹25K</option>
-            <option value="25000-50000">₹25K–₹50K</option>
-            <option value="50000-100000">₹50K–₹1L</option>
-            <option value="Above 100000">Above ₹1L</option>
-          </select>
-        </div>
-        <div class="fld"><label>Existing Brand</label>
-          <select id="f-model">
-            <option value="">-- Brand --</option>
-            <option>Exide</option><option>Amaron</option><option>Luminous</option>
-            <option>Okaya</option><option>Livguard</option><option>Su-Kam</option>
-            <option>Microtek</option><option>Loom Solar</option>
-            <option>Local Brand</option><option>No Battery (New)</option><option>Other</option>
-          </select>
-        </div>
-      </div>
-      <div class="frow">
-        <div class="fld"><label>Lead Source</label>
-          <select id="f-source">
-            <option value="">-- Source --</option>
-            <option>Walk-in</option><option>Referral</option><option>Exhibition</option>
-            <option>Social Media</option><option>WhatsApp</option>
-            <option>Cold Call</option><option>Dealer</option><option>Other</option>
-          </select>
-        </div>
-        <div class="fld"><label>Assigned To</label>
-          <select id="f-assigned">
-            <option value="">-- Select --</option>
-            <option>Sukhpal</option><option>Darpan</option><option>Other</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-sec-title">Stage & Follow-up</div>
-      <div class="fld">
-        <label>Stage <span class="req">*</span></label>
-        <div class="stage-pills">
-          <div class="sp sel" data-s="New Lead"        onclick="selStage(this)">🆕 New Lead</div>
-          <div class="sp"     data-s="Quotation Sent"  onclick="selStage(this)">📄 Quotation</div>
-          <div class="sp"     data-s="Follow-up"       onclick="selStage(this)">📞 Follow-up</div>
-          <div class="sp"     data-s="Order Confirmed" onclick="selStage(this)">✅ Won</div>
-          <div class="sp"     data-s="Lost"            onclick="selStage(this)">❌ Lost</div>
-        </div>
-        <input type="hidden" id="f-stage" value="New Lead">
-      </div>
-      <div class="frow">
-        <div class="fld"><label>Follow-up Date</label><input type="date" id="f-followup"></div>
-      </div>
-      <div class="fld"><label>Notes / Remarks</label><textarea id="f-notes" placeholder="Koi important info..."></textarea></div>
-
-    </div>
-    <div class="mfooter">
-      <button onclick="closeAddModal()" style="background:var(--bg);color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:.48rem .9rem;font-size:.74rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Cancel</button>
-      <button class="btn-primary" id="add-btn" onclick="addLead()">⚡ Add to Pipeline</button>
+    <div class="tb-right">
+      <div class="tb-k"><div class="tb-k-v" id="t-total">0</div><div class="tb-k-l">Total</div></div>
+      <div class="tb-sep"></div>
+      <div class="tb-k"><div class="tb-k-v" id="t-won">0</div><div class="tb-k-l">Won</div></div>
+      <div class="tb-sep"></div>
+      <div class="tb-k"><div class="tb-k-v" id="t-rate">0%</div><div class="tb-k-l">Conv. Rate</div></div>
+      <div class="tb-sep"></div>
+      <div class="tb-k"><div class="tb-k-v" id="t-due" style="color:#fde5a3">0</div><div class="tb-k-l">Due Today</div></div>
+      <div class="tb-sep"></div>
+      <span class="tb-role" id="tb-role-badge">ADMIN</span>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+      <div class="tb-sep"></div>
+      <button class="btn-new-lead" onclick="openAddModal()">+ New Lead</button>
     </div>
   </div>
-</div>
+
+  <!-- PAGE -->
+  <div class="page">
+
+    <!-- KPI Cards -->
+    <div class="kpi-row">
+      <div class="kpi kpi-all active-kpi" id="kpi-all"  onclick="setFilter('All',this)">           <div class="kpi-v" id="k-total">0</div><div class="kpi-l">All Leads</div></div>
+      <div class="kpi kpi-new"            id="kpi-new"  onclick="setFilter('New Lead',this)">      <div class="kpi-v" id="k-new">0</div>  <div class="kpi-l">New Lead</div></div>
+      <div class="kpi kpi-quot"           id="kpi-quot" onclick="setFilter('Quotation Sent',this)"><div class="kpi-v" id="k-quot">0</div> <div class="kpi-l">Quotation</div></div>
+      <div class="kpi kpi-fol"            id="kpi-fol"  onclick="setFilter('Follow-up',this)">     <div class="kpi-v" id="k-fol">0</div>  <div class="kpi-l">Follow-up</div></div>
+      <div class="kpi kpi-won"            id="kpi-won"  onclick="setFilter('Order Confirmed',this)"><div class="kpi-v" id="k-won">0</div> <div class="kpi-l">Won</div></div>
+      <div class="kpi kpi-lost"           id="kpi-lost" onclick="setFilter('Lost',this)">          <div class="kpi-v" id="k-lost">0</div> <div class="kpi-l">Lost</div></div>
+    </div>
+
+    <!-- Pipeline Bar -->
+    <div class="pipe-bar" id="pipe-bar"></div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <input class="fsearch" type="text" id="search-inp" placeholder="🔍 Name, company, phone search karo..." oninput="renderTable()">
+      <span class="sort-lbl">Sort:</span>
+      <button class="sort-btn on" onclick="setSort('date',this)">Latest</button>
+      <button class="sort-btn"   onclick="setSort('name',this)">Name</button>
+      <button class="sort-btn"   onclick="setSort('followup',this)">Follow-up</button>
+      <button class="sort-btn"   onclick="setSort('stage',this)">Stage</button>
+    </div>
+
+    <!-- Lead Table -->
+    <div class="lead-table">
+      <div class="lt-head">
+        <div class="lt-h">Customer</div>
+        <div class="lt-h">Application</div>
+        <div class="lt-h">Stage</div>
+        <div class="lt-h">Follow-up</div>
+        <div class="lt-h">Assigned</div>
+        <div class="lt-h">Actions</div>
+      </div>
+      <div class="lt-body" id="lt-body"></div>
+    </div>
+  </div>
+
+  <!-- DETAIL MODAL -->
+  <div class="moverlay" id="modal-detail" onclick="if(event.target===this)closeDetail()">
+    <div class="modal-detail">
+      <div class="mhead">
+        <div class="mtitle" id="detail-title">Lead Details</div>
+        <button class="mclose" onclick="closeDetail()">✕</button>
+      </div>
+      <div class="mbody" id="detail-body"></div>
+      <div class="mfooter" id="detail-footer"></div>
+    </div>
+  </div>
+
+  <!-- ADD LEAD MODAL -->
+  <div class="moverlay" id="modal-add" onclick="if(event.target===this)closeAddModal()">
+    <div class="modal-add">
+      <div class="mhead">
+        <div class="mtitle">+ Add New Lead</div>
+        <button class="mclose" onclick="closeAddModal()">✕</button>
+      </div>
+      <div class="mbody">
+
+        <div class="form-sec-title">Customer Info</div>
+        <div class="fld"><label>Customer Name <span class="req">*</span></label><input type="text" id="f-name" placeholder="Full name" autocomplete="off"></div>
+        <div class="frow">
+          <div class="fld"><label>Phone <span class="req">*</span></label><input type="tel" id="f-phone" placeholder="Mobile"></div>
+          <div class="fld"><label>Email</label><input type="email" id="f-email" placeholder="email@..."></div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Company / Dealer</label><input type="text" id="f-company" placeholder="Company name"></div>
+          <div class="fld"><label>City</label><input type="text" id="f-city" placeholder="City"></div>
+        </div>
+        <div class="fld"><label>State</label><input type="text" id="f-state" placeholder="State"></div>
+
+        <div class="form-sec-title">Battery Requirement</div>
+        <div class="fld"><label>Application Type <span class="req">*</span></label>
+          <select id="f-oem">
+            <option value="">-- Select Application --</option>
+            <option>2 Wheeler (Electric Bike/Scooter)</option>
+            <option>3 Wheeler (E-Rickshaw/Auto)</option>
+            <option>Solar (Home/Commercial)</option>
+            <option>Inverter / Home UPS</option>
+            <option>Cycle (E-Cycle)</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="f3">
+          <div class="fld"><label>Voltage</label>
+            <select id="f-voltage">
+              <option value="">-- V --</option>
+              <option>12V</option><option>24V</option><option>36V</option>
+              <option>48V</option><option>60V</option><option>72V</option><option>96V</option><option>Custom</option>
+            </select>
+          </div>
+          <div class="fld"><label>Capacity</label>
+            <select id="f-capacity">
+              <option value="">-- Ah --</option>
+              <option>20Ah</option><option>30Ah</option><option>40Ah</option>
+              <option>50Ah</option><option>60Ah</option><option>75Ah</option>
+              <option>100Ah</option><option>150Ah</option><option>200Ah</option><option>Custom</option>
+            </select>
+          </div>
+          <div class="fld"><label>Qty</label><input type="number" id="f-fleet" placeholder="No." min="1"></div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Budget (₹)</label>
+            <select id="f-amount">
+              <option value="">-- Select --</option>
+              <option value="Under 5000">Under ₹5K</option>
+              <option value="5000-10000">₹5K–₹10K</option>
+              <option value="10000-25000">₹10K–₹25K</option>
+              <option value="25000-50000">₹25K–₹50K</option>
+              <option value="50000-100000">₹50K–₹1L</option>
+              <option value="Above 100000">Above ₹1L</option>
+            </select>
+          </div>
+          <div class="fld"><label>Existing Brand</label>
+            <select id="f-model">
+              <option value="">-- Brand --</option>
+              <option>Exide</option><option>Amaron</option><option>Luminous</option>
+              <option>Okaya</option><option>Livguard</option><option>Su-Kam</option>
+              <option>Microtek</option><option>Loom Solar</option>
+              <option>Local Brand</option><option>No Battery (New)</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Lead Source</label>
+            <select id="f-source">
+              <option value="">-- Source --</option>
+              <option>Walk-in</option><option>Referral</option><option>Exhibition</option>
+              <option>Social Media</option><option>WhatsApp</option>
+              <option>Cold Call</option><option>Dealer</option><option>Other</option>
+            </select>
+          </div>
+          <div class="fld"><label>Assigned To</label>
+            <select id="f-assigned">
+              <option value="">-- Select --</option>
+              <option>Sukhpal</option><option>Darpan</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-sec-title">Stage & Follow-up</div>
+        <div class="fld">
+          <label>Stage <span class="req">*</span></label>
+          <div class="stage-pills">
+            <div class="sp sel" data-s="New Lead"        onclick="selStage(this)">🆕 New Lead</div>
+            <div class="sp"     data-s="Quotation Sent"  onclick="selStage(this)">📄 Quotation</div>
+            <div class="sp"     data-s="Follow-up"       onclick="selStage(this)">📞 Follow-up</div>
+            <div class="sp"     data-s="Order Confirmed" onclick="selStage(this)">✅ Won</div>
+            <div class="sp"     data-s="Lost"            onclick="selStage(this)">❌ Lost</div>
+          </div>
+          <input type="hidden" id="f-stage" value="New Lead">
+        </div>
+        <div class="frow">
+          <div class="fld"><label>Follow-up Date</label><input type="date" id="f-followup"></div>
+        </div>
+        <div class="fld"><label>Notes / Remarks</label><textarea id="f-notes" placeholder="Koi important info..."></textarea></div>
+
+      </div>
+      <div class="mfooter">
+        <button onclick="closeAddModal()" style="background:var(--bg);color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:.48rem .9rem;font-size:.74rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Cancel</button>
+        <button class="btn-primary" id="add-btn" onclick="addLead()">⚡ Add to Pipeline</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /app -->
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
