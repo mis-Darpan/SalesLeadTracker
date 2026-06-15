@@ -203,3 +203,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 .toast.show{opacity:1;transform:translateY(0);}
 .toast.ok{background:var(--green);}
 .toast.err{background:var(--red);}
+
+/* ── LOGIN SCREEN ── */
+#login-screen{display:none;position:fixed;inset:0;background:var(--ink);z-index:1000;align-items:center;justify-content:center;}
+.login-box{background:var(--white);border-radius:16px;padding:2.2rem 2rem;width:100%;max-width:360px;box-shadow:var(--sh3);text-align:center;}
+.login-logo{background:var(--blue);color:#fff;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;padding:4px 12px;border-radius:5px;display:inline-block;letter-spacing:.5px;margin-bottom:1rem;}
+.login-title{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--ink);margin-bottom:.2rem;}
+.login-sub{font-size:.72rem;color:var(--muted);margin-bottom:1.6rem;}
+.login-box .fld{text-align:left;margin-bottom:1rem;}
+.login-box .fld label{font-size:.7rem;font-weight:700;color:var(--ink3);display:block;margin-bottom:.3rem;}
+.login-box input[type=password]{background:var(--bg);border:1.5px solid var(--border);border-radius:8px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.9rem;padding:.55rem .75rem;width:100%;transition:border .15s;outline:none;}
+.login-box input[type=password]:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px var(--blue-l);}
+.login-error{font-size:.72rem;color:var(--red);min-height:1.1rem;margin-bottom:.6rem;font-weight:600;}
+#login-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:.65rem;font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .16s;box-shadow:0 3px 12px rgba(26,79,214,.3);}
+#login-btn:hover{background:var(--blue-d);}
+#login-btn:disabled{background:var(--border2);box-shadow:none;cursor:not-allowed;}
+
+/* ── TOPBAR ROLE BADGE & LOGOUT ── */
+.tb-role{background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.4px;}
+.btn-logout{background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:.28rem .65rem;font-size:.65rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .13s;}
+.btn-logout:hover{background:rgba(255,255,255,.15);color:#fff;}
