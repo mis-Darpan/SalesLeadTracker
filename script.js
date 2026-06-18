@@ -25,7 +25,7 @@ const GS_HEADERS = [
   'Lead Source','Stage','Next Follow-up','Assigned To','Notes','Last Updated'
 ];
 
-let FILTER = 'All', SORT = 'date';
+let FILTER = 'All', SORT = 'date', TODAY_ONLY = false;
 let ALL_LEADS = [];
 
 // ── AUTH ──
@@ -161,7 +161,7 @@ function addLead() {
     stage,
     followup: document.getElementById('f-followup').value,
     notes:    document.getElementById('f-notes').value.trim(),
-    assigned: currentLabel(), // auto-assign to logged-in user
+    assigned: document.getElementById('f-assigned').value || currentLabel(),
     history:  [{ stage, date: td(), note: 'Lead added' }],
     updatedAt: td()
   };
@@ -181,7 +181,7 @@ function addLead() {
 function resetForm() {
   ['f-name','f-phone','f-email','f-company','f-city','f-state','f-fleet','f-notes','f-followup']
     .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-  ['f-oem','f-voltage','f-capacity','f-model','f-source','f-amount']
+  ['f-oem','f-voltage','f-capacity','f-model','f-source','f-amount','f-assigned']
     .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   document.querySelectorAll('#modal-add .sp').forEach(p => p.classList.remove('sel'));
   document.querySelector('#modal-add .sp[data-s="New Lead"]').classList.add('sel');
@@ -191,6 +191,8 @@ function resetForm() {
 // ── FILTER / SORT ──
 function setFilter(f, el) {
   FILTER = f;
+  TODAY_ONLY = false;
+  document.getElementById('btn-today')?.classList.remove('on');
   document.querySelectorAll('.kpi').forEach(k => k.classList.remove('active-kpi'));
   el.classList.add('active-kpi');
   renderTable();
@@ -199,6 +201,17 @@ function setSort(s, el) {
   SORT = s;
   document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('on'));
   el.classList.add('on');
+  renderTable();
+}
+function toggleToday(el) {
+  TODAY_ONLY = !TODAY_ONLY;
+  el.classList.toggle('on', TODAY_ONLY);
+  if (TODAY_ONLY) {
+    // reset stage filter
+    FILTER = 'All';
+    document.querySelectorAll('.kpi').forEach(k => k.classList.remove('active-kpi'));
+    document.getElementById('kpi-all')?.classList.add('active-kpi');
+  }
   renderTable();
 }
 
@@ -228,7 +241,8 @@ function renderTable() {
   leads = leads.filter(l => {
     const mf = FILTER === 'All' || l.stage === FILTER;
     const ms = !q || l.name.toLowerCase().includes(q) || (l.company || '').toLowerCase().includes(q) || (l.phone || '').includes(q);
-    return mf && ms;
+    const mt = !TODAY_ONLY || l.followup === td();
+    return mf && ms && mt;
   });
 
   if (SORT === 'name')          leads.sort((a, b) => a.name.localeCompare(b.name));
