@@ -73,6 +73,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 .lt-row{display:grid;grid-template-columns:2fr 1.4fr 1.2fr 1fr 1fr 1fr;align-items:center;padding:.6rem 1rem;border-bottom:1px solid var(--border);gap:.5rem;cursor:pointer;transition:background .12s;}
 .lt-row:last-child{border-bottom:none;}
 .lt-row:hover{background:var(--blue-l);}
+
+/* ── OVERDUE / DUE TODAY ROW HIGHLIGHT ── */
+.lt-row.row-overdue{background:#fff5f5;border-left:3px solid var(--red);}
+.lt-row.row-overdue:hover{background:#ffe8e8;}
+.lt-row.row-due-today{background:#fffbf0;border-left:3px solid var(--amber);}
+.lt-row.row-due-today:hover{background:#fff3d4;}
+
 .lt-name{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:var(--ink);}
 .lt-co{font-size:.65rem;color:var(--muted);margin-top:.08rem;}
 .lt-phone{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--ink3);}
