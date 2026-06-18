@@ -77,6 +77,7 @@
     <!-- Toolbar -->
     <div class="toolbar">
       <input class="fsearch" type="text" id="search-inp" placeholder="🔍 Name, company, phone search karo..." oninput="renderTable()">
+      <button class="sort-btn today-btn" id="btn-today" onclick="toggleToday(this)">📞 Today's Tasks</button>
       <span class="sort-lbl">Sort:</span>
       <button class="sort-btn on" onclick="setSort('date',this)">Latest</button>
       <button class="sort-btn"   onclick="setSort('name',this)">Name</button>
@@ -189,6 +190,12 @@
             <option>Walk-in</option><option>Referral</option><option>Exhibition</option>
             <option>Social Media</option><option>WhatsApp</option>
             <option>Cold Call</option><option>Dealer</option><option>Other</option>
+          </select>
+        </div>
+        <div class="fld"><label>Assigned To</label>
+          <select id="f-assigned">
+            <option value="">-- Select --</option>
+            <option>Mohit</option><option>Vijay</option>
           </select>
         </div>
 
