@@ -3,8 +3,8 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzHRH4whSlic0Oe2Gc4A
 // ── ROLES CONFIG ──
 const ROLES = {
   admin:   { password: 'litpax@admin',   label: 'Admin',   fullAccess: true  },
-  sukhpal: { password: 'sukhpal@litpax', label: 'Sukhpal', fullAccess: false },
-  darpan:  { password: 'darpan@litpax',  label: 'Darpan',  fullAccess: false },
+  vijay: { password: 'vijay@litpax', label: 'Vijay', fullAccess: false },
+  mohit: { password: 'mohit@litpax', label: 'Mohit', fullAccess: false },
 };
 
 const MAIN_STAGES = ['New Lead', 'Quotation Sent', 'Follow-up', 'Order Confirmed'];
