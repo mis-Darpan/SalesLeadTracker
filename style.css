@@ -64,6 +64,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-
 .sort-lbl{font-size:.7rem;color:var(--muted);margin-left:auto;}
 .sort-btn{padding:.3rem .65rem;border-radius:6px;font-size:.68rem;font-weight:600;border:1px solid var(--border);cursor:pointer;background:var(--white);color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .13s;}
 .sort-btn:hover,.sort-btn.on{background:var(--bg2);border-color:var(--border2);color:var(--ink3);}
+.today-btn{border-color:var(--amber-m);color:var(--amber);}
+.today-btn.on{background:var(--amber);border-color:var(--amber);color:#fff;}
 
 /* ── LEAD TABLE ── */
 .lead-table{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--sh);}
