@@ -2,7 +2,9 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzHRH4whSlic0Oe2Gc4A
 
 // ── ROLES CONFIG ──
 const ROLES = {
-  admin: { password: 'litpax@admin', label: 'Admin', fullAccess: true }
+  admin:   { password: 'litpax@admin',   label: 'Admin',   fullAccess: true  },
+  sukhpal: { password: 'sukhpal@litpax', label: 'Sukhpal', fullAccess: false },
+  darpan:  { password: 'darpan@litpax',  label: 'Darpan',  fullAccess: false },
 };
 
 const MAIN_STAGES = ['New Lead', 'Quotation Sent', 'Follow-up', 'Order Confirmed'];
@@ -24,7 +26,7 @@ const GS_HEADERS = [
 ];
 
 let FILTER = 'All', SORT = 'date';
-let ALL_LEADS = []; // in-memory only, no localStorage
+let ALL_LEADS = [];
 
 // ── AUTH ──
 function getSession() {
@@ -37,6 +39,15 @@ function logout() {
   sessionStorage.removeItem('ltx_session');
   showLogin();
 }
+function currentRole() {
+  return getSession()?.role || null;
+}
+function isAdmin() {
+  return ROLES[currentRole()]?.fullAccess === true;
+}
+function currentLabel() {
+  return ROLES[currentRole()]?.label || '';
+}
 
 function showLogin() {
   document.getElementById('app').style.display = 'none';
@@ -48,8 +59,7 @@ function showLogin() {
 function showApp() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
-  const session = getSession();
-  document.getElementById('tb-role-badge').textContent = session?.role?.toUpperCase() || 'ADMIN';
+  document.getElementById('tb-role-badge').textContent = currentLabel().toUpperCase();
   fetchLeads();
 }
 
@@ -73,7 +83,6 @@ function doLogin() {
   }, 400);
 }
 
-// Enter key on password field
 function loginKeydown(e) { if (e.key === 'Enter') doLogin(); }
 
 // ── TOAST ──
@@ -86,7 +95,7 @@ function toast(msg, type = '') {
 
 function td() { return new Date().toISOString().slice(0, 10); }
 
-// ── FETCH FROM SHEET (real-time) ──
+// ── FETCH FROM SHEET ──
 async function fetchLeads() {
   document.getElementById('lt-body').innerHTML = `<div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-title">Sheet se data load ho raha hai...</div></div>`;
   try {
@@ -108,6 +117,13 @@ async function fetchLeads() {
     updateStats();
     toast('❌ Sheet se connect nahi hua — Script check karo', 'err');
   }
+}
+
+// ── VISIBLE LEADS (role filter) ──
+function visibleLeads() {
+  if (isAdmin()) return ALL_LEADS;
+  const me = currentLabel(); // 'Sukhpal' or 'Darpan'
+  return ALL_LEADS.filter(l => (l.assigned || '').toLowerCase() === me.toLowerCase());
 }
 
 // ── FORM ──
@@ -145,7 +161,7 @@ function addLead() {
     stage,
     followup: document.getElementById('f-followup').value,
     notes:    document.getElementById('f-notes').value.trim(),
-    assigned: document.getElementById('f-assigned').value,
+    assigned: currentLabel(), // auto-assign to logged-in user
     history:  [{ stage, date: td(), note: 'Lead added' }],
     updatedAt: td()
   };
@@ -153,7 +169,7 @@ function addLead() {
   syncToSheets('addLead', lead).then(ok => {
     if (ok) {
       toast('✅ Lead added & synced!', 'ok');
-      fetchLeads(); // refresh from sheet
+      fetchLeads();
     } else {
       toast('❌ Sheet sync nahi hua — check karo', 'err');
     }
@@ -165,7 +181,7 @@ function addLead() {
 function resetForm() {
   ['f-name','f-phone','f-email','f-company','f-city','f-state','f-fleet','f-notes','f-followup']
     .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-  ['f-oem','f-voltage','f-capacity','f-model','f-source','f-assigned','f-amount']
+  ['f-oem','f-voltage','f-capacity','f-model','f-source','f-amount']
     .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   document.querySelectorAll('#modal-add .sp').forEach(p => p.classList.remove('sel'));
   document.querySelector('#modal-add .sp[data-s="New Lead"]').classList.add('sel');
@@ -196,9 +212,18 @@ function fuHtml(followup) {
   return `<span class="fu-ok">📅 ${followup}</span>`;
 }
 
+// ── OVERDUE ROW CLASS ──
+function rowClass(l) {
+  if (!l.followup || l.stage === 'Order Confirmed' || l.stage === 'Lost') return '';
+  const diff = Math.round((new Date(l.followup) - new Date(td())) / 86400000);
+  if (diff < 0)   return ' row-overdue';
+  if (diff === 0) return ' row-due-today';
+  return '';
+}
+
 // ── RENDER TABLE ──
 function renderTable() {
-  let leads = [...ALL_LEADS];
+  let leads = [...visibleLeads()];
   const q = (document.getElementById('search-inp')?.value || '').toLowerCase();
   leads = leads.filter(l => {
     const mf = FILTER === 'All' || l.stage === FILTER;
@@ -221,7 +246,7 @@ function renderTable() {
   const ns = l => NEXT_STAGE[l.stage];
 
   body.innerHTML = leads.map(l => `
-    <div class="lt-row" onclick="openDetail('${l.id}')">
+    <div class="lt-row${rowClass(l)}" onclick="openDetail('${l.id}')">
       <div>
         <div class="lt-name">${l.name}</div>
         <div class="lt-co">${[l.company, l.city].filter(Boolean).join(' · ') || '—'}</div>
@@ -249,7 +274,7 @@ function quickStage(id, stage) {
 
 // ── STATS ──
 function updateStats() {
-  const leads = ALL_LEADS;
+  const leads = visibleLeads();
   const c = s => leads.filter(l => l.stage === s).length;
   document.getElementById('k-total').textContent = leads.length;
   document.getElementById('k-new').textContent   = c('New Lead');
@@ -318,28 +343,64 @@ function openDetail(id) {
       <span style="font-size:.65rem;color:var(--muted)">Added: ${l.date}</span>
       <span style="font-size:.65rem;color:var(--muted)">· Updated: ${l.updatedAt || l.date}</span>
     </div>
+
     <div class="sec-title">Pipeline Journey</div>
     ${buildJourney(l)}
-    <div class="sec-title">Customer Details</div>
-    <div class="dgrid">
-      <div class="ditem"><div class="dlbl">Phone</div><div class="dval">${l.phone}</div></div>
-      <div class="ditem"><div class="dlbl">Email</div><div class="dval">${l.email || '—'}</div></div>
-      <div class="ditem"><div class="dlbl">Company</div><div class="dval">${l.company || '—'}</div></div>
-      <div class="ditem"><div class="dlbl">Location</div><div class="dval">${[l.city, l.state].filter(Boolean).join(', ') || '—'}</div></div>
+
+    <div class="sec-title">Edit Customer Info</div>
+    <div class="frow">
+      <div class="fld"><label>Customer Name</label><input type="text" id="e-name" value="${l.name || ''}"></div>
+      <div class="fld"><label>Phone</label><input type="tel" id="e-phone" value="${l.phone || ''}"></div>
     </div>
-    <div class="sec-title">Battery Requirement</div>
-    <div class="dgrid">
-      <div class="ditem"><div class="dlbl">Application</div><div class="dval">${l.oem || '—'}</div></div>
-      <div class="ditem"><div class="dlbl">Voltage / Capacity</div><div class="dval">${[l.voltage, l.capacity].filter(Boolean).join(' / ') || '—'}</div></div>
-      <div class="ditem"><div class="dlbl">No. of Batteries</div><div class="dval">${l.fleet || '—'}</div></div>
-      <div class="ditem"><div class="dlbl">Existing Brand</div><div class="dval">${l.model || '—'}</div></div>
-      <div class="ditem"><div class="dlbl">Budget</div><div class="dval">${l.amount || '—'}</div></div>
-      <div class="ditem"><div class="dlbl">Lead Source</div><div class="dval">${l.source || '—'}</div></div>
-      <div class="ditem"><div class="dlbl">Assigned To</div><div class="dval">${l.assigned || '—'}</div></div>
-      <div class="ditem"><div class="dlbl">Follow-up Date</div><div class="dval">${fuHtml(l.followup)}</div></div>
+    <div class="frow">
+      <div class="fld"><label>Email</label><input type="email" id="e-email" value="${l.email || ''}"></div>
+      <div class="fld"><label>Company</label><input type="text" id="e-company" value="${l.company || ''}"></div>
     </div>
-    ${l.notes ? `<div style="background:var(--amber-l);border:1px solid var(--amber-m);border-radius:7px;padding:.55rem .8rem;font-size:.76rem;color:var(--ink3);margin-bottom:.85rem">💬 ${l.notes}</div>` : ''}
-    <div class="sec-title">Update Stage</div>
+    <div class="frow">
+      <div class="fld"><label>City</label><input type="text" id="e-city" value="${l.city || ''}"></div>
+      <div class="fld"><label>State</label><input type="text" id="e-state" value="${l.state || ''}"></div>
+    </div>
+
+    <div class="sec-title">Edit Requirement</div>
+    <div class="fld"><label>Application Type</label>
+      <select id="e-oem">
+        <option value="">-- Select --</option>
+        ${['2 Wheeler (Electric Bike/Scooter)','3 Wheeler (E-Rickshaw/Auto)','Solar (Home/Commercial)','Inverter / Home UPS','Cycle (E-Cycle)','Other']
+          .map(o => `<option${l.oem===o?' selected':''}>${o}</option>`).join('')}
+      </select>
+    </div>
+    <div class="f3">
+      <div class="fld"><label>Voltage</label>
+        <select id="e-voltage">
+          <option value="">-- V --</option>
+          ${['12V','24V','36V','48V','60V','72V','96V','Custom'].map(o=>`<option${l.voltage===o?' selected':''}>${o}</option>`).join('')}
+        </select>
+      </div>
+      <div class="fld"><label>Capacity</label>
+        <select id="e-capacity">
+          <option value="">-- Ah --</option>
+          ${['20Ah','30Ah','40Ah','50Ah','60Ah','75Ah','100Ah','150Ah','200Ah','Custom'].map(o=>`<option${l.capacity===o?' selected':''}>${o}</option>`).join('')}
+        </select>
+      </div>
+      <div class="fld"><label>Qty</label><input type="number" id="e-fleet" value="${l.fleet || ''}" min="1"></div>
+    </div>
+    <div class="frow">
+      <div class="fld"><label>Budget</label>
+        <select id="e-amount">
+          <option value="">-- Select --</option>
+          ${[['Under 5000','Under ₹5K'],['5000-10000','₹5K–₹10K'],['10000-25000','₹10K–₹25K'],['25000-50000','₹25K–₹50K'],['50000-100000','₹50K–₹1L'],['Above 100000','Above ₹1L']]
+            .map(([v,t])=>`<option value="${v}"${l.amount===v?' selected':''}>${t}</option>`).join('')}
+        </select>
+      </div>
+      <div class="fld"><label>Lead Source</label>
+        <select id="e-source">
+          <option value="">-- Source --</option>
+          ${['Walk-in','Referral','Exhibition','Social Media','WhatsApp','Cold Call','Dealer','Other'].map(o=>`<option${l.source===o?' selected':''}>${o}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+
+    <div class="sec-title">Stage & Follow-up</div>
     <div class="stage-btns">
       ${['New Lead','Quotation Sent','Follow-up','Order Confirmed','Lost'].map(s => `
         <button class="sb2 ${l.stage === s ? 'cur' : ''}" data-s="${s}" onclick="setDetailStage('${s}')">${S_EMOJI[s]} ${s}</button>`).join('')}
@@ -352,6 +413,10 @@ function openDetail(id) {
         <input type="text" id="d-note" placeholder="Note daalo..." style="background:var(--bg);border:1.5px solid var(--border);border-radius:6px;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.8rem;padding:.42rem .65rem;width:100%">
       </div>
     </div>
+    <div class="fld" style="margin-bottom:.85rem"><label>Notes / Remarks</label>
+      <textarea id="e-notes" style="height:60px">${l.notes || ''}</textarea>
+    </div>
+
     <div class="sec-title">History</div>
     <div class="hist-list">
       ${(l.history || []).slice().reverse().map(h => `
@@ -361,6 +426,7 @@ function openDetail(id) {
           ${h.note ? `<span class="hist-note">— ${h.note}</span>` : ''}
         </div>`).join('')}
     </div>
+
     <div class="copy-wrap">
       <div class="copy-head">
         <div class="copy-head-title">📋 Google Sheet — Copy &amp; Paste</div>
@@ -399,10 +465,33 @@ function setDetailStage(s) {
 function saveDetail(id) {
   const l = ALL_LEADS.find(x => x.id === id);
   if (!l) return;
-  const ns   = document.querySelector('.sb2.cur')?.dataset.s || l.stage;
-  const nf   = document.getElementById('d-followup').value;
-  const note = document.getElementById('d-note').value.trim();
-  syncToSheets('updateLead', { id, stage: ns, followup: nf, notes: note }).then(ok => {
+
+  const ns      = document.querySelector('.sb2.cur')?.dataset.s || l.stage;
+  const nf      = document.getElementById('d-followup').value;
+  const note    = document.getElementById('d-note').value.trim();
+
+  // edited fields
+  const updated = {
+    id,
+    stage:    ns,
+    followup: nf,
+    notes:    document.getElementById('e-notes').value.trim(),
+    name:     document.getElementById('e-name').value.trim(),
+    phone:    document.getElementById('e-phone').value.trim(),
+    email:    document.getElementById('e-email').value.trim(),
+    company:  document.getElementById('e-company').value.trim(),
+    city:     document.getElementById('e-city').value.trim(),
+    state:    document.getElementById('e-state').value.trim(),
+    oem:      document.getElementById('e-oem').value,
+    voltage:  document.getElementById('e-voltage').value,
+    capacity: document.getElementById('e-capacity').value,
+    fleet:    document.getElementById('e-fleet').value,
+    amount:   document.getElementById('e-amount').value,
+    source:   document.getElementById('e-source').value,
+    quickNote: note,
+  };
+
+  syncToSheets('updateLead', updated).then(ok => {
     if (ok) { toast('✅ Updated & synced!', 'ok'); closeDetail(); fetchLeads(); }
     else toast('❌ Update nahi hua', 'err');
   });
